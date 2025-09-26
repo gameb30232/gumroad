@@ -72,9 +72,7 @@ class WishlistPresenter
       can_edit: pundit_user&.user ? Pundit.policy!(pundit_user, wishlist).update? : false,
       discover_opted_out: pundit_user&.user && Pundit.policy!(pundit_user, wishlist).update? ? wishlist.discover_opted_out? : nil,
       checkout_enabled: wishlist.alive_wishlist_products.available_to_buy.any?,
-      items: items_with_pagination[:items],
-      pagination: items_with_pagination[:pagination],
-    }
+    }.merge(items_with_pagination)
   end
 
   ASSOCIATIONS_FOR_CARD = [
