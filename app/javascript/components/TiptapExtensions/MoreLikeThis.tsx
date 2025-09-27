@@ -83,7 +83,7 @@ const MoreLikeThisNodeView = ({ editor, node, extension, selected }: NodeViewPro
                 ),
                 menu: (close) => (
                   <>
-                    <div role="menuitem" style={{ pointerEvents: "none", backgroundColor: "transparent" }}>
+                    <div role="menuitem" className="bg-transparent" style={{ pointerEvents: "none" }}>
                       <b>More like this recommendations:</b>
                     </div>
                     <div onChange={close}>
