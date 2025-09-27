@@ -12,7 +12,7 @@
         </div>
         <div class="section">
           <% if @offer_code %>
-            <s style="display: inline;"><%= MoneyFormatter.format(@product.price_cents, @product.price_currency_type, no_cents_if_whole: true, symbol: true) %></s>
+            <s class="inline"><%= MoneyFormatter.format(@product.price_cents, @product.price_currency_type, no_cents_if_whole: true, symbol: true) %></s>
           <% end %>
           <%= MoneyFormatter.format(@offer_code ? @product.price_cents - @offer_code.amount_off(@product.price_cents) : @product.price_cents, @product.price_currency_type, no_cents_if_whole: true, symbol: true) %>
         </div>
