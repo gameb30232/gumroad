@@ -18,6 +18,7 @@ export const BundleEditContext = React.createContext<{
   id: string;
   uniquePermalink: string;
   currencyType: CurrencyCode;
+  setCurrencyType: (currencyType: CurrencyCode) => void;
   thumbnail: Thumbnail | null;
   salesCountForInventory: number;
   ratings: RatingsWithPercentages;

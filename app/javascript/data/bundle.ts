@@ -4,13 +4,14 @@ import { ResponseError, request } from "$app/utils/request";
 
 import { Bundle, BundleProduct } from "$app/components/BundleEdit/state";
 
-export const saveBundle = async (id: string, bundle: Bundle) => {
+export const saveBundle = async (id: string, bundle: Bundle, currencyType?: string) => {
   const response = await request({
     method: "PUT",
     accept: "json",
     url: Routes.bundle_path(id),
     data: {
       ...bundle,
+      price_currency_type: currencyType,
       covers: bundle.covers.map(({ id }) => id),
       products: bundle.products.map((bundleProduct, idx) => ({
         product_id: bundleProduct.id,

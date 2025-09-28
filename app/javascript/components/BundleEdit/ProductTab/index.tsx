@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import { CUSTOM_BUTTON_TEXT_OPTIONS } from "$app/parsers/product";
+import { currencyCodeList } from "$app/utils/currency";
 
 import { Layout, useProductUrl } from "$app/components/BundleEdit/Layout";
 import { ProductPreview } from "$app/components/BundleEdit/ProductPreview";
@@ -24,6 +25,7 @@ export const ProductTab = () => {
     updateBundle,
     uniquePermalink,
     currencyType,
+    setCurrencyType,
     thumbnail: initialThumbnail,
     refundPolicies,
     seller_refund_policy_enabled,
@@ -86,6 +88,12 @@ export const ProductTab = () => {
             }
             setIsPWYW={(isPWYW) => updateBundle({ customizable_price: isPWYW })}
             currencyType={currencyType}
+            currencyCodeSelector={{
+              options: currencyCodeList,
+              onChange: (currencyCode) => {
+                setCurrencyType(currencyCode);
+              },
+            }}
             eligibleForInstallmentPlans={bundle.eligible_for_installment_plans}
             allowInstallmentPlan={bundle.allow_installment_plan}
             numberOfInstallments={bundle.installment_plan?.number_of_installments ?? null}

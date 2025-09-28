@@ -73,6 +73,7 @@ const BundleEditPage = ({
   seller_refund_policy,
 }: Props) => {
   const [bundle, setBundle] = React.useState(initialBundle);
+  const [currencyType, setCurrencyType] = React.useState(currency_type);
   const updateBundle = (update: Partial<Bundle> | ((bundle: Bundle) => void)) =>
     setBundle((prevBundle) => {
       const updated = { ...prevBundle };
@@ -94,7 +95,8 @@ const BundleEditPage = ({
       updateBundle,
       id,
       uniquePermalink: unique_permalink,
-      currencyType: currency_type,
+      currencyType,
+      setCurrencyType,
       thumbnail,
       salesCountForInventory: sales_count_for_inventory,
       ratings,
@@ -106,7 +108,7 @@ const BundleEditPage = ({
       seller_refund_policy_enabled,
       seller_refund_policy,
     }),
-    [bundle],
+    [bundle, currencyType],
   );
 
   return (
@@ -141,6 +143,7 @@ const BundleEditRouter = async (global: GlobalProps) => {
         updateBundle: () => {},
         uniquePermalink: unique_permalink,
         currencyType: currency_type,
+        setCurrencyType: () => {},
         thumbnail,
         salesCountForInventory: sales_count_for_inventory,
         ratings,

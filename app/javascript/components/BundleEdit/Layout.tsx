@@ -37,7 +37,7 @@ export const Layout = ({
   preview: React.ReactNode;
   isLoading?: boolean;
 }) => {
-  const { bundle, updateBundle, id, uniquePermalink } = useBundleEditContext();
+  const { bundle, updateBundle, id, uniquePermalink, currencyType } = useBundleEditContext();
 
   const url = useProductUrl();
 
@@ -48,7 +48,7 @@ export const Layout = ({
   const handleSave = async () => {
     try {
       setIsSaving(true);
-      await saveBundle(id, bundle);
+      await saveBundle(id, bundle, currencyType);
       showAlert("Changes saved!", "success");
     } catch (e) {
       assertResponseError(e);
@@ -61,7 +61,7 @@ export const Layout = ({
   const setPublished = async (published: boolean) => {
     try {
       setIsPublishing(true);
-      await saveBundle(id, bundle);
+      await saveBundle(id, bundle, currencyType);
       await setProductPublished(uniquePermalink, published);
       updateBundle({ is_published: published });
       showAlert(published ? "Published!" : "Unpublished!", "success");
