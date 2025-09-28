@@ -69,8 +69,10 @@ describe "Sales analytics", :js, :sidekiq_inline, :elasticsearch_wait_for_refres
 
 
       find('[aria-label="Aggregate by"]').click
-      expect(page).to have_selector("input[type='radio'][value='monthly']", visible: :all)
-      find("input[type='radio'][value='monthly']", visible: :all).set(true)
+      expect(page).to have_selector("fieldset")
+      within("fieldset") do
+        find("label", text: "Monthly", match: :prefer_exact).click
+      end
 
       expect(page).to have_css(".point", count: 1)
       expect(page).to have_css("path.bar", count: 2)
@@ -78,8 +80,10 @@ describe "Sales analytics", :js, :sidekiq_inline, :elasticsearch_wait_for_refres
       expect(chart).to have_tooltip(text: "6 views\n4 sales\n(66.7% conversion)\n$12\nDecember 2023")
 
       find('[aria-label="Aggregate by"]').click
-      expect(page).to have_selector("input[type='radio'][value='daily']", visible: :all)
-      find("input[type='radio'][value='daily']", visible: :all).set(true)
+      expect(page).to have_selector("fieldset")
+      within("fieldset") do
+        find("label", text: "Daily", match: :prefer_exact).click
+      end
 
       select_disclosure "Select products..." do
         uncheck "Product 1"
@@ -158,8 +162,10 @@ describe "Sales analytics", :js, :sidekiq_inline, :elasticsearch_wait_for_refres
       end
 
       find('[aria-label="Locations"]').click
-      expect(page).to have_selector("input[type='radio'][value='us']", visible: :all)
-      find("input[type='radio'][value='us']", visible: :all).set(true)
+      expect(page).to have_selector("fieldset")
+      within("fieldset") do
+        find("label", text: "United States", match: :prefer_exact).click
+      end
       within_table("Locations") do
         expect(page).to have_table_rows_in_order(
           [
