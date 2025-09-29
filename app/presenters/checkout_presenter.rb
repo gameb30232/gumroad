@@ -190,7 +190,7 @@ class CheckoutPresenter
                        .map { |price| { id: price.external_id, recurrence: price.recurrence, price_cents: price.price_cents } },
         options:,
       },
-      existing_custom_field_values: subscription.original_purchase.purchase_custom_fields.map do |field|
+      existing_custom_field_values: subscription.original_purchase.purchase_custom_fields.includes(:custom_field).map do |field|
         { id: field.custom_field.external_id, value: field.value }
       end,
       contact_info: {

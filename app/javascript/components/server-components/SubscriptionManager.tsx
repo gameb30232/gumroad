@@ -212,13 +212,10 @@ const SubscriptionManager = ({
   const payLabel = cancelled ? `Restart ${subscriptionEntity}` : `Update ${subscriptionEntity}`;
   const { require_email_typo_acknowledgment } = useFeatureFlags();
 
-  const initialCustomFieldValues = React.useMemo(() => {
-    const values: Record<string, string> = {};
-    existing_custom_field_values.forEach(({ id, value }) => {
-      values[id] = typeof value === "boolean" ? value.toString() : value;
-    });
-    return values;
-  }, [existing_custom_field_values]);
+  const initialCustomFieldValues = React.useMemo(
+    () => Object.fromEntries(existing_custom_field_values.map(({ id, value }) => [id, value.toString()])),
+    [existing_custom_field_values],
+  );
 
   const reducer = createReducer({
     country: contact_info.country,
@@ -260,8 +257,7 @@ const SubscriptionManager = ({
     if (state.status.type !== "finished") return;
 
     const custom_fields = product.custom_fields.map((field) => {
-      const key = field.id;
-      const value = state.customFieldValues[key];
+      const value = state.customFieldValues[field.id];
       return {
         id: field.id,
         value: field.type === "text" ? (value ?? "") : value === "true",

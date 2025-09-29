@@ -425,23 +425,30 @@ class Subscription::UpdaterService
     end
 
     def update_custom_fields(purchase, custom_fields_params)
-      product_custom_fields = product.checkout_custom_fields
+      return if custom_fields_params.blank?
+
+      product_custom_fields = product.checkout_custom_fields.index_by(&:external_id)
+      return if (valid_custom_fields = product_custom_fields.slice(*custom_fields_params.pluck(:id)).values).empty?
+
+      existing_purchase_custom_fields = purchase.purchase_custom_fields
+        .where(custom_field_id: valid_custom_fields.map(&:id))
+        .index_by(&:custom_field_id)
 
       custom_fields_params.each do |field_params|
-        custom_field = product_custom_fields.find { |cf| cf.external_id == field_params[:id] }
-        next unless custom_field
+        next unless (custom_field = product_custom_fields[field_params[:id]])
 
-        purchase_custom_field = purchase.purchase_custom_fields.find_by(custom_field: custom_field)
+        existing_record = existing_purchase_custom_fields[custom_field.id]
 
-        if purchase_custom_field
-          purchase_custom_field.update!(value: field_params[:value])
+        if existing_record
+          existing_record.update!(value: field_params[:value])
         else
           PurchaseCustomField.create!(
             purchase: purchase,
             custom_field: custom_field,
             name: custom_field.name,
             field_type: custom_field.type,
-            value: field_params[:value]
+            value: field_params[:value],
+            is_post_purchase: custom_field.is_post_purchase?
           )
         end
       end
