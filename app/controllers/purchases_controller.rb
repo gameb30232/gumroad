@@ -499,7 +499,7 @@ class PurchasesController < ApplicationController
                                                    :price_range, :perceived_price_cents, :perceived_upgrade_price_cents, :quantity,
                                                    :declined, stripe_error: {}, variants: [], contact_info: [:email, :full_name,
                                                                                                              :street_address, :city, :state, :zip_code, :country],
-                                                   custom_fields: [:id, :value]).to_h
+                                                              custom_fields: [:id, :value]).to_h
     end
 
     def hide_layouts

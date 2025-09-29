@@ -2659,9 +2659,9 @@ describe Subscription::UpdaterService, :vcr do
         it "updates existing custom field values" do
           # Create existing custom field value
           existing_value = create(:purchase_custom_field,
-                                 purchase: @subscription.original_purchase,
-                                 custom_field: custom_field,
-                                 value: "30")
+                                  purchase: @subscription.original_purchase,
+                                  custom_field: custom_field,
+                                  value: "30")
 
           result = Subscription::UpdaterService.new(
             subscription: @subscription,
