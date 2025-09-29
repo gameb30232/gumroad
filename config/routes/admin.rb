@@ -81,7 +81,7 @@ namespace :admin do
 
   resources :affiliates, only: [:index, :show], defaults: { format: "html" }
 
-  resources :links, only: [:show], defaults: { format: "html" } do
+  resources :links, only: [], defaults: { format: "html" } do
     member do
       get :access_product_file
       get :generate_url_redirect
@@ -93,7 +93,9 @@ namespace :admin do
     end
   end
 
-  resources :products, controller: "links", only: [:show, :destroy] do
+  resources :products, only: [:show]
+
+  resources :products, controller: "links", only: [:destroy] do
     member do
       get "/file/:product_file_id/access", to: "links#access_product_file", as: :admin_access_product_file
       get :views_count

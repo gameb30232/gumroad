@@ -18,10 +18,6 @@ class Admin::LinksController < Admin::BaseController
     redirect_to url_redirect.download_page_url
   end
 
-  def show
-    @title = @product.name
-  end
-
   def access_product_file
     url_redirect = @product.url_redirects.build
     product_file = ProductFile.find_by_external_id(params[:product_file_id])

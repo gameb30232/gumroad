@@ -29,7 +29,7 @@ const AdminUsersProductsHeader = ({ product, isCurrentUrl }: Props) => {
           <h2>
             {product.price_formatted},
             { isCurrentUrl ? product.name : (
-              <Link href={Routes.admin_link_path(product.id)}>{product.name}</Link>
+              <Link href={Routes.admin_product_path(product.id)}>{product.name}</Link>
             )}
           </h2>
 

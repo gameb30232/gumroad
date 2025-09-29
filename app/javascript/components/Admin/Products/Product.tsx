@@ -57,7 +57,7 @@ type AdminUsersProductsProductProps = {
 const AdminUsersProductsProduct = ({ product, is_affiliate_user }: AdminUsersProductsProductProps) => {
   const { url, props } = usePage();
   const { user, compliance } = props as unknown as { user: User; compliance: Compliance };
-  const isCurrentUrl = url === Routes.admin_link_url(product.id);
+  const isCurrentUrl = url === Routes.admin_product_url(product.id);
 
   return (
     <article className="card" data-product-id={product.unique_permalink}>
