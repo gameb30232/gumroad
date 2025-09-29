@@ -2608,6 +2608,94 @@ describe Subscription::UpdaterService, :vcr do
           end
         end
       end
+
+      describe "custom fields" do
+        let(:custom_field) { create(:custom_field, name: "Age", type: "text") }
+        let(:checkbox_custom_field) { create(:custom_field, name: "Newsletter", type: "checkbox") }
+        let(:params_with_custom_fields) do
+          {
+            id: @subscription.external_id,
+            price_id: @quarterly_product_price.external_id,
+            variants: [@original_tier.external_id],
+            quantity: 1,
+            use_existing_card: true,
+            perceived_price_cents: @original_tier_quarterly_price.price_cents,
+            perceived_upgrade_price_cents: 0,
+            custom_fields: [
+              { id: custom_field.external_id, value: "25" },
+              { id: checkbox_custom_field.external_id, value: true }
+            ]
+          }
+        end
+
+        before do
+          @product.custom_fields << [custom_field, checkbox_custom_field]
+        end
+
+        it "updates custom fields when provided" do
+          result = Subscription::UpdaterService.new(
+            subscription: @subscription,
+            gumroad_guid: @gumroad_guid,
+            params: params_with_custom_fields,
+            logged_in_user: @user,
+            remote_ip: @remote_ip,
+          ).perform
+
+          expect(result[:success]).to eq true
+
+          updated_purchase = @subscription.reload.original_purchase
+
+          # Check text custom field
+          text_custom_field_value = updated_purchase.purchase_custom_fields.find_by(custom_field: custom_field)
+          expect(text_custom_field_value).to be_present
+          expect(text_custom_field_value.value).to eq "25"
+
+          # Check checkbox custom field
+          checkbox_custom_field_value = updated_purchase.purchase_custom_fields.find_by(custom_field: checkbox_custom_field)
+          expect(checkbox_custom_field_value).to be_present
+          expect(checkbox_custom_field_value.value).to eq true
+        end
+
+        it "updates existing custom field values" do
+          # Create existing custom field value
+          existing_value = create(:purchase_custom_field,
+                                 purchase: @subscription.original_purchase,
+                                 custom_field: custom_field,
+                                 value: "30")
+
+          result = Subscription::UpdaterService.new(
+            subscription: @subscription,
+            gumroad_guid: @gumroad_guid,
+            params: params_with_custom_fields,
+            logged_in_user: @user,
+            remote_ip: @remote_ip,
+          ).perform
+
+          expect(result[:success]).to eq true
+
+          updated_purchase = @subscription.reload.original_purchase
+          updated_value = updated_purchase.purchase_custom_fields.find_by(custom_field: custom_field)
+
+          expect(updated_value.id).to eq existing_value.id
+          expect(updated_value.value).to eq "25"
+        end
+
+        it "handles custom fields with no changes" do
+          params_without_custom_fields = params_with_custom_fields.except(:custom_fields)
+
+          result = Subscription::UpdaterService.new(
+            subscription: @subscription,
+            gumroad_guid: @gumroad_guid,
+            params: params_without_custom_fields,
+            logged_in_user: @user,
+            remote_ip: @remote_ip,
+          ).perform
+
+          expect(result[:success]).to eq true
+          # Should not create any custom field values
+          expect(@subscription.reload.original_purchase.purchase_custom_fields.count).to eq 0
+        end
+      end
     end
 
     context "non-tiered membership subscription" do

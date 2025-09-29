@@ -587,6 +587,7 @@ describe CheckoutPresenter do
                                  is_installment_plan: false,
                                },
                                contact_info: { city: "San Francisco", country: "US", email: @subscription.email, full_name: "Jane Gumroad", state: "CA", street: "100 Main St", zip: "00000" },
+                               existing_custom_field_values: [],
                                discover_url: discover_url(protocol: PROTOCOL, host: DISCOVER_DOMAIN),
                                countries: Compliance::Countries.for_select.to_h,
                                us_states: STATES,
@@ -665,6 +666,32 @@ describe CheckoutPresenter do
         it "uses the IP country" do
           result = described_class.new(logged_in_user: nil, ip: "127.0.0.1").subscription_manager_props(subscription: @subscription)
           expect(result[:contact_info][:country]).to eq "BR"
+        end
+      end
+
+      context "with existing custom field values" do
+        let(:custom_field) { create(:custom_field, name: "Age", type: "text") }
+        let(:checkbox_custom_field) { create(:custom_field, name: "Newsletter", type: "checkbox") }
+
+        before do
+          @product.custom_fields << [custom_field, checkbox_custom_field]
+          create(:purchase_custom_field,
+                 purchase: @subscription.original_purchase,
+                 custom_field: custom_field,
+                 value: "25")
+          create(:purchase_custom_field,
+                 purchase: @subscription.original_purchase,
+                 custom_field: checkbox_custom_field,
+                 value: true)
+        end
+
+        it "includes existing custom field values in the response" do
+          result = described_class.new(logged_in_user: nil, ip: "127.0.0.1").subscription_manager_props(subscription: @subscription)
+
+          expect(result[:existing_custom_field_values]).to contain_exactly(
+            { id: custom_field.external_id, value: "25" },
+            { id: checkbox_custom_field.external_id, value: "t" }
+          )
         end
       end
     end

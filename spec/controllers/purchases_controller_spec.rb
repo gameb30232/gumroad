@@ -1106,6 +1106,36 @@ describe PurchasesController, :vcr do
         end
       end
 
+      context "with custom fields" do
+        let(:custom_field) { create(:custom_field, name: "Age", type: "text") }
+        let(:params_with_custom_fields) do
+          params_new_card.merge(
+            custom_fields: [
+              { id: custom_field.external_id, value: "25" }
+            ]
+          )
+        end
+
+        before do
+          @product.custom_fields << custom_field
+        end
+
+        it "updates custom fields along with other subscription data" do
+          travel_to(@originally_subscribed_at + 1.month) do
+            put :update_subscription, params: params_with_custom_fields
+
+            expect(response.parsed_body["success"]).to eq true
+            expect(response.parsed_body["success_message"]).to eq "Your membership has been updated."
+
+            updated_purchase = @subscription.reload.original_purchase
+            custom_field_value = updated_purchase.purchase_custom_fields.find_by(custom_field: custom_field)
+
+            expect(custom_field_value).to be_present
+            expect(custom_field_value.value).to eq "25"
+          end
+        end
+      end
+
       context "when encrypted cookie is not present" do
         before do
           cookies.encrypted[@subscription.cookie_key] = nil
