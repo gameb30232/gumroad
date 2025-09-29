@@ -52,9 +52,11 @@ describe PushOpenaiProductFeedJob do
           expect(File.exist?(local_path)).to be true
 
           content = File.read(local_path)
+          lines = content.split("\n")
+
           expect(content).to include("id\ttitle\tdescription")
-          expect(content).to include(published_product.unique_permalink)
-          expect(content).not_to include(draft_product.unique_permalink)
+          expect(lines.any? { |line| line.include?(published_product.unique_permalink) }).to be true
+          expect(lines.any? { |line| line.include?(draft_product.unique_permalink) }).to be false
         end
 
         described_class.new.perform
@@ -87,8 +89,10 @@ describe PushOpenaiProductFeedJob do
       it "only includes published products" do
         allow(sftp_session_double).to receive(:upload!) do |local_path, _remote_path|
           content = File.read(local_path)
-          expect(content).to include(published_product.unique_permalink)
-          expect(content).not_to include(draft_product.unique_permalink)
+          lines = content.split("\n")
+
+          expect(lines.any? { |line| line.include?(published_product.unique_permalink) }).to be true
+          expect(lines.any? { |line| line.include?(draft_product.unique_permalink) }).to be false
         end
 
         described_class.new.perform
@@ -277,8 +281,13 @@ describe PushOpenaiProductFeedJob do
                                   native_type: "digital",
                                   draft: false)
         allow(preorder_product).to receive(:is_in_preorder_state).and_return(true)
+        allow(preorder_product).to receive(:published?).and_return(true)
 
-        allow(Link).to receive_message_chain(:alive, :where, :where, :includes).and_return([preorder_product])
+        alive_scope = double("alive_scope")
+        allow(Link).to receive(:alive).and_return(alive_scope)
+        allow(alive_scope).to receive(:where).and_return(alive_scope)
+        allow(alive_scope).to receive(:not).and_return(alive_scope)
+        allow(alive_scope).to receive(:includes).and_return([preorder_product])
 
         allow(sftp_session_double).to receive(:upload!) do |local_path, _remote_path|
           content = File.read(local_path)
