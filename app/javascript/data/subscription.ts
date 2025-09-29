@@ -47,6 +47,7 @@ export type UpdateSubscriptionPayload = {
   perceived_upgrade_price_cents: number;
   // for PWYW tier
   price_range?: number | undefined;
+  custom_fields?: { id: string; value: string | boolean }[];
 };
 
 export const updateSubscription = async (

@@ -61,6 +61,7 @@ type Props = {
     exchange_rate: number;
     shippable_country_codes: string[];
   };
+  existing_custom_field_values: { id: string; value: string | boolean }[];
   subscription: {
     id: string;
     recurrence: RecurrenceId;
@@ -92,7 +93,7 @@ type Props = {
   us_states: string[];
   ca_provinces: string[];
   used_card: SavedCreditCard | null;
-  recaptcha_key: string;
+  recaptcha_key: string | null;
   paypal_client_id: string;
 };
 
@@ -106,6 +107,7 @@ const SubscriptionManager = ({
   us_states,
   ca_provinces,
   used_card,
+  existing_custom_field_values,
 }: Props) => {
   const url = new URL(useOriginalLocation());
 
@@ -209,6 +211,15 @@ const SubscriptionManager = ({
   };
   const payLabel = cancelled ? `Restart ${subscriptionEntity}` : `Update ${subscriptionEntity}`;
   const { require_email_typo_acknowledgment } = useFeatureFlags();
+
+  const initialCustomFieldValues = React.useMemo(() => {
+    const values: Record<string, string> = {};
+    existing_custom_field_values.forEach(({ id, value }) => {
+      values[id] = typeof value === "boolean" ? value.toString() : value;
+    });
+    return values;
+  }, [existing_custom_field_values]);
+
   const reducer = createReducer({
     country: contact_info.country,
     email: contact_info.email,
@@ -229,6 +240,13 @@ const SubscriptionManager = ({
     requireEmailTypoAcknowledgment: require_email_typo_acknowledgment,
   });
   const [state, dispatchAction] = reducer;
+
+  React.useEffect(() => {
+    Object.entries(initialCustomFieldValues).forEach(([key, value]) => {
+      dispatchAction({ type: "set-custom-field", key, value });
+    });
+  }, [dispatchAction, initialCustomFieldValues]);
+
   React.useEffect(
     () => dispatchAction({ type: "update-products", products: [paymentProduct] }),
     [amountDueToday, requirePayment],
@@ -240,6 +258,16 @@ const SubscriptionManager = ({
 
   async function pay() {
     if (state.status.type !== "finished") return;
+
+    const custom_fields = product.custom_fields.map((field) => {
+      const key = field.id;
+      const value = state.customFieldValues[key];
+      return {
+        id: field.id,
+        value: field.type === "text" ? (value ?? "") : value === "true",
+      };
+    });
+
     const result = await updateSubscription({
       cardParams:
         state.status.paymentMethod.type === "not-applicable" || state.status.paymentMethod.type === "saved"
@@ -254,6 +282,7 @@ const SubscriptionManager = ({
       perceived_upgrade_price_cents: amountDueToday,
       quantity: selection.quantity,
       price_range: isPWYW ? (selection.price.value ?? 0) * selection.quantity : undefined,
+      custom_fields,
       contact_info: {
         country: state.country,
         email: state.email,

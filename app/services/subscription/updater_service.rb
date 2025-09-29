@@ -58,6 +58,11 @@ class Subscription::UpdaterService
           original_purchase.update!(params[:contact_info])
         end
 
+        # Update custom fields
+        if params[:custom_fields].present?
+          update_custom_fields(original_purchase, params[:custom_fields])
+        end
+
         if !same_plan_and_price? || (is_resubscribing && overdue_for_charge)
           subscription.update!(flat_fee_applicable: true) unless subscription.flat_fee_applicable?
         end
@@ -417,5 +422,28 @@ class Subscription::UpdaterService
 
     def subscription_entity
       subscription.is_installment_plan ? "installment plan" : "membership"
+    end
+
+    def update_custom_fields(purchase, custom_fields_params)
+      product_custom_fields = product.checkout_custom_fields
+
+      custom_fields_params.each do |field_params|
+        custom_field = product_custom_fields.find { |cf| cf.external_id == field_params[:id] }
+        next unless custom_field
+
+        purchase_custom_field = purchase.purchase_custom_fields.find_by(custom_field: custom_field)
+
+        if purchase_custom_field
+          purchase_custom_field.update!(value: field_params[:value])
+        else
+          PurchaseCustomField.create!(
+            purchase: purchase,
+            custom_field: custom_field,
+            name: custom_field.name,
+            field_type: custom_field.type,
+            value: field_params[:value]
+          )
+        end
+      end
     end
 end
