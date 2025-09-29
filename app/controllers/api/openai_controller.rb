@@ -15,10 +15,104 @@ class Api::OpenaiController < ApplicationController
       build_product_feed_item(product)
     end
 
-    render json: { products: feed_items }, status: :ok
+    format = determine_format
+
+    case format
+    when "json"
+      render json: { products: feed_items }, status: :ok
+    when "csv"
+      render plain: generate_csv(feed_items), status: :ok, content_type: "text/csv"
+    when "tsv"
+      render plain: generate_tsv(feed_items), status: :ok, content_type: "text/tab-separated-values"
+    when "xml"
+      render xml: generate_xml(feed_items), status: :ok, content_type: "application/xml"
+    else
+      render json: { error: "Unsupported format. Supported formats: json, csv, tsv, xml" }, status: :bad_request
+    end
   end
 
   private
+    def determine_format
+      format_param = params[:format]&.downcase
+      return format_param if %w[json csv tsv xml].include?(format_param)
+
+      accept_header = request.headers["Accept"]
+      return "csv" if accept_header&.include?("text/csv")
+      return "tsv" if accept_header&.include?("text/tab-separated-values")
+      return "xml" if accept_header&.include?("application/xml")
+      return "json" if accept_header&.include?("application/json")
+
+      "json"
+    end
+
+    def generate_csv(feed_items)
+      require "csv"
+      CSV.generate do |csv|
+        csv << csv_headers
+        feed_items.each do |item|
+          csv << csv_row(item)
+        end
+      end
+    end
+
+    def generate_tsv(feed_items)
+      require "csv"
+      CSV.generate(col_sep: "\t") do |tsv|
+        tsv << csv_headers
+        feed_items.each do |item|
+          tsv << csv_row(item)
+        end
+      end
+    end
+
+    def generate_xml(feed_items)
+      builder = Builder::XmlMarkup.new(indent: 2)
+      builder.instruct! :xml, version: "1.0", encoding: "UTF-8"
+      builder.products do
+        feed_items.each do |item|
+          builder.product do
+            item.each do |key, value|
+              builder.tag!(key, value)
+            end
+          end
+        end
+      end
+    end
+
+    def csv_headers
+      %w[
+        id title description link image_link product_category brand material weight
+        price availability inventory_quantity seller_name seller_url
+        seller_privacy_policy seller_tos return_policy return_window
+        enable_search enable_checkout
+      ]
+    end
+
+    def csv_row(item)
+      [
+        item[:id],
+        item[:title],
+        item[:description],
+        item[:link],
+        item[:image_link],
+        item[:product_category],
+        item[:brand],
+        item[:material],
+        item[:weight],
+        item[:price],
+        item[:availability],
+        item[:inventory_quantity],
+        item[:seller_name],
+        item[:seller_url],
+        item[:seller_privacy_policy],
+        item[:seller_tos],
+        item[:return_policy],
+        item[:return_window],
+        item[:enable_search],
+        item[:enable_checkout]
+      ]
+    end
+
     def build_product_feed_item(product)
       {
         enable_search: true,
