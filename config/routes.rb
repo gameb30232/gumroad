@@ -34,8 +34,6 @@ Rails.application.routes.draw do
 
   # API routes used in both api.gumroad.com and gumroad.com/api
   def api_routes
-    get "openai/product_feed", to: "openai#product_feed"
-
     scope "v2", module: "v2", as: "v2" do
       resources :licenses, only: [] do
         collection do

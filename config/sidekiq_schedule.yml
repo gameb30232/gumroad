@@ -124,6 +124,10 @@ expire_transcoded_videos:
   cron: "50 8 * * *" # UTC 08:50
   class: ExpireTranscodedVideosJob
   description: Marks old (in term of access) transcoded videos as deleted
+push_openai_product_feed:
+  cron: "0 0 * * *" # UTC 00:00 - TODO: Update frequency based on OpenAI requirements (important-comment)
+  class: PushOpenaiProductFeedJob
+  description: Pushes OpenAI product feed to SFTP server
 
 # Weekly (Payouts)
 payouts_cross_border_stripe:

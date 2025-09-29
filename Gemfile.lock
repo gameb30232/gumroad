@@ -586,8 +586,11 @@ GEM
       net-protocol
     net-protocol (0.2.2)
       timeout
+    net-sftp (4.0.0)
+      net-ssh (>= 5.0.0, < 8.0.0)
     net-smtp (0.5.0)
       net-protocol
+    net-ssh (7.3.0)
     netrc (0.11.0)
     nio4r (2.7.3)
     nokogiri (1.16.7)
@@ -1178,6 +1181,7 @@ DEPENDENCIES
   money (~> 6.16)
   mongoid (~> 9.0)
   mysql2 (>= 0.5.6)
+  net-sftp (~> 4.0)
   nokogiri (~> 1.13)
   omniauth-facebook (~> 10.0)
   omniauth-google-oauth2 (~> 1.1, >= 1.1.1)
