@@ -44,8 +44,8 @@ const AdminProductPurchases = ({
   );
 
   const fetchNextPage = () => {
-    if (pagination?.next) {
-      fetchPurchases({ page: pagination.next });
+    if (purchases.length >= pagination.limit) {
+      fetchPurchases({ page: pagination.page + 1 });
     }
   };
 

@@ -4,15 +4,16 @@ class Admin::Products::PurchasesController < Admin::Products::BaseController
   include Pagy::Backend
 
   def index
-    pagy, purchases = pagy_countless(
+    pagination, purchases = pagy_countless(
       Purchase.for_admin_listing.includes(:subscription, :price, :refunds),
       limit: params[:per_page],
-      page: params[:page]
+      page: params[:page],
+      countless_minimal: true
     )
 
     render json: {
       purchases: purchases.as_json(admin_review: true),
-      pagination: pagy
+      pagination:
     }
   end
 end
