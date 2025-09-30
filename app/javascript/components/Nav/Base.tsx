@@ -11,17 +11,6 @@ import { TeamMembership } from "$app/components/LoggedInUser";
 import { showAlert } from "$app/components/server-components/Alert";
 import { useOriginalLocation } from "$app/components/useOriginalLocation";
 
-type NavLinkProps = {
-  text: string;
-  icon?: IconName;
-  badge?: React.ReactNode;
-  href: string;
-  exactHrefMatch?: boolean;
-  dataTurbo?: boolean;
-  additionalPatterns?: string[];
-  onClick?: (ev: React.MouseEvent<HTMLAnchorElement>) => void;
-};
-
 type NavContextValue = {
   close: () => void;
 };
@@ -30,16 +19,27 @@ const NavContext = React.createContext<NavContextValue | undefined>(undefined);
 
 export const useNav = () => React.useContext(NavContext);
 
-export const NavLink = ({
+interface BaseNavLinkProps {
+  text: string;
+  icon?: IconName;
+  badge?: React.ReactNode;
+  href: string;
+  exactHrefMatch?: boolean;
+  additionalPatterns?: string[];
+  component?: string | React.ComponentType;
+  onClick?: (ev: React.MouseEvent<HTMLAnchorElement>) => void;
+};
+
+const BaseNavLink = ({
   text,
   icon,
   badge,
   href,
   exactHrefMatch,
-  dataTurbo = false,
   additionalPatterns = [],
-  onClick,
-}: NavLinkProps) =>  {
+  component = "a",
+  ...props
+}: BaseNavLinkProps) => {
   const { href: originalHref } = new URL(useOriginalLocation());
   const ariaCurrent = [href, ...additionalPatterns].some((pattern) => {
     const escaped = escapeRegExp(pattern);
@@ -48,14 +48,15 @@ export const NavLink = ({
     ? "page"
     : undefined;
 
+  const Component = component === "a" ? "a" : (component as React.ComponentType<any>);
+
   return (
-    <a
+    <Component
       aria-current={ariaCurrent}
       href={href}
       title={text}
-      onClick={onClick}
       className="flex items-center"
-      data-turbo={dataTurbo}
+      {...props}
     >
       {icon ? <Icon name={icon} /> : null}
       {text}
@@ -65,7 +66,41 @@ export const NavLink = ({
           {badge}
         </>
       ) : null}
-    </a>
+    </Component>
+  );
+};
+
+interface NavLinkProps extends BaseNavLinkProps {
+  onClick?: (ev: React.MouseEvent<HTMLAnchorElement>) => void;
+};
+
+export const NavLink = ({
+  onClick,
+  ...props
+}: NavLinkProps) =>  {
+  return (
+    <BaseNavLink
+      {...props}
+      {...(onClick && { onClick })}
+    />
+  );
+};
+
+interface InertiaNavLinkProps extends BaseNavLinkProps {
+  prefetch?: boolean;
+};
+
+export const InertiaNavLink = ({
+  prefetch = false,
+  ...props
+}: InertiaNavLinkProps) =>  {
+  console.log("prefetch", prefetch);
+  console.log("props", props);
+  return (
+    <BaseNavLink
+      {...props}
+      {...(prefetch && { prefetch })}
+    />
   );
 };
 

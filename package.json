@@ -16,7 +16,6 @@
     "@anycable/web": "^1.1.0",
     "@helperai/client": "^0.4.4",
     "@helperai/react": "^0.9.4",
-    "@hotwired/turbo-rails": "^8.0.16",
     "@inertiajs/progress": "^0.2.7",
     "@inertiajs/react": "^2.1.2",
     "@paypal/paypal-js": "^8.0.0",
