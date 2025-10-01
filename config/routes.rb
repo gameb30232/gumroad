@@ -19,6 +19,9 @@ Rails.application.routes.draw do
   get "/healthcheck" => "healthcheck#index"
   get "/healthcheck/sidekiq" => "healthcheck#sidekiq"
 
+  # ACME HTTP challenge endpoint for SSL certificate validation
+  get "/.well-known/acme-challenge/:token", to: "acme_challenges#show"
+
   use_doorkeeper do
     controllers applications: "oauth/applications"
     controllers authorized_applications: "oauth/authorized_applications"

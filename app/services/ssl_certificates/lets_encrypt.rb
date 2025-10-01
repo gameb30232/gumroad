@@ -16,7 +16,6 @@ module SslCertificates
       prepare_http_challenge(http_challenge)
 
       # Wait until the nginx server syncs the validation files
-      sleep(nginx_sync_duration)
       request_validation(http_challenge)
 
       poll_validation_status(http_challenge)
@@ -76,12 +75,12 @@ module SslCertificates
         def prepare_http_challenge(http_challenge)
           filename     = http_challenge.filename
           file_content = http_challenge.file_content
-          write_to_s3(http_challenge_s3_key(filename), file_content)
+          store_http_challenge_in_redis(filename, file_content)
         end
 
         def delete_http_challenge(http_challenge)
           filename = http_challenge.filename
-          delete_from_s3(http_challenge_s3_key(filename))
+          delete_http_challenge_from_redis(filename)
         end
 
         def order_certificate
@@ -106,6 +105,22 @@ module SslCertificates
 
         def account_private_key
           OpenSSL::PKey::RSA.new(ENV["LETS_ENCRYPT_ACCOUNT_PRIVATE_KEY"])
+        end
+
+        def store_http_challenge_in_redis(filename, file_content)
+          redis_key = http_challenge_redis_key(filename)
+          $redis.setex(redis_key, 3600, file_content) # Expire after 1 hour
+          log_message(domain, "Stored HTTP challenge in Redis: #{redis_key}")
+        end
+
+        def delete_http_challenge_from_redis(filename)
+          redis_key = http_challenge_redis_key(filename)
+          $redis.del(redis_key)
+          log_message(domain, "Deleted HTTP challenge from Redis: #{redis_key}")
+        end
+
+        def http_challenge_redis_key(filename)
+          "acme_challenge:#{filename}"
         end
   end
 end
