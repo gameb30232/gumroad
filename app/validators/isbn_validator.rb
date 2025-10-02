@@ -15,7 +15,7 @@ class IsbnValidator < ActiveModel::EachValidator
         false
       end
 
-    record.errors.add(attribute, "is not a valid ISBN") unless valid
+    record.errors.add(attribute, options[:message] || "is not a valid ISBN-10 or ISBN-13") unless valid
   end
 
   private

@@ -815,6 +815,53 @@ describe ProductFile do
     end
   end
 
+  describe "isbn" do
+    context "validation" do
+      context "when pdf" do
+        it "is valid with a valid isbn" do
+          product_file = build(:pdf_product_file, isbn: "978-3-16-148410-0")
+          expect(product_file).to be_valid
+        end
+
+        it "is invalid with an invalid isbn" do
+          product_file = build(:pdf_product_file, isbn: "invalid-isbn")
+          expect(product_file).to be_invalid
+          expect(product_file.errors.full_messages).to include(a_string_including("is not a valid ISBN-10 or ISBN-13"))
+        end
+
+        it "is valid with a nil isbn" do
+          product_file = build(:pdf_product_file, isbn: nil)
+          expect(product_file).to be_valid
+        end
+      end
+
+      context "when epub" do
+        it "is valid with a valid isbn" do
+          product_file = build(:epub_product_file, isbn: "978-3-16-148410-0")
+          expect(product_file).to be_valid
+        end
+
+        it "is invalid with an invalid isbn" do
+          product_file = build(:epub_product_file, isbn: "invalid-isbn")
+          expect(product_file).to be_invalid
+          expect(product_file.errors.full_messages).to include(a_string_including("is not a valid ISBN-10 or ISBN-13"))
+        end
+
+        it "is valid with a nil isbn" do
+          product_file = build(:epub_product_file, isbn: nil)
+          expect(product_file).to be_valid
+        end
+      end
+
+      context "when unrelated file type" do
+        it "doesn't allow isbn" do
+          product_file = build(:streamable_video, isbn: "invalid-isbn")
+          expect(product_file).to be_invalid
+        end
+      end
+    end
+  end
+
   describe "scopes" do
     describe ".in_order" do
       it "returns files in ascending order of positions" do
