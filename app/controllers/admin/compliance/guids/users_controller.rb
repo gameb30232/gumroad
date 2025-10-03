@@ -10,7 +10,7 @@ class Admin::Compliance::Guids::Usersontroller < Admin::Compliance::Guids::BaseC
     end
 
     def users_scope
-      User.where(id: Event.by_browser_guid(guid).select(:user_id))
+      User.includes(:purchases).where(id: Event.by_browser_guid(guid).select(:user_id))
     end
 
     def inertia_template

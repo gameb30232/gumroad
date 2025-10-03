@@ -21,7 +21,7 @@ class Admin::Compliance::CardsController < Admin::BaseController
   private
 
   def page_title
-    "Transaction results"
+    params[:query].present? ? "Transaction results for #{params[:query].strip}" : "Transaction results"
   end
 
   def search_params

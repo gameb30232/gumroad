@@ -33,7 +33,7 @@ class Admin::AffiliatesController < Admin::BaseController
   private
 
     def page_title
-      "Search for #{params[:query].strip}"
+      "Search for #{params[:query] ? params[:query].strip : "affiliates"}"
     end
 
     def users_scope

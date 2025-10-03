@@ -14,7 +14,7 @@ class Admin::Search::PurchasesController < Admin::Search::BaseController
   private
 
     def page_title
-      "Purchase results"
+      params[:query].present? ? "Purchase results for #{params[:query].strip}" : "Purchase results"
     end
 
     def search_params
