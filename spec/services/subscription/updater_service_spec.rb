@@ -2864,13 +2864,11 @@ describe Subscription::UpdaterService, :vcr do
         subscription = purchase.subscription
         product = subscription.link
 
-
         subscription.update_columns(
           charge_occurrence_count: product.installment_plan.number_of_installments,
           user_requested_cancellation_at: 1.day.ago,
           ended_at: 1.day.ago
         )
-
 
         (product.installment_plan.number_of_installments - 1).times do
           create(:purchase, link: product, subscription: subscription, purchaser: subscription.user)
