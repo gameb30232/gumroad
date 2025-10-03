@@ -51,7 +51,6 @@ class ProductFile < ApplicationRecord
   after_commit :schedule_rename_in_storage, on: :update, if: :saved_change_to_display_name?
 
   attr_json_data_accessor :epub_section_info
-  attr_json_data_accessor :isbn
   has_s3_fields :url
 
   scope :in_order, -> { order(position: :asc) }
