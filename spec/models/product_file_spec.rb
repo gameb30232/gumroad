@@ -818,8 +818,13 @@ describe ProductFile do
   describe "isbn" do
     context "validation" do
       context "when pdf" do
-        it "is valid with a valid isbn" do
-          product_file = build(:pdf_product_file, isbn: "978-3-16-148410-0")
+        it "is valid with a valid isbn-13" do
+          product_file = build(:pdf_product_file, isbn: Faker::Code.isbn(base: 13))
+          expect(product_file).to be_valid
+        end
+
+        it "is valid with a valid isbn-10" do
+          product_file = build(:pdf_product_file, isbn: Faker::Code.isbn)
           expect(product_file).to be_valid
         end
 
@@ -836,8 +841,13 @@ describe ProductFile do
       end
 
       context "when epub" do
-        it "is valid with a valid isbn" do
-          product_file = build(:epub_product_file, isbn: "978-3-16-148410-0")
+        it "is valid with a valid isbn-13" do
+          product_file = build(:epub_product_file, isbn: Faker::Code.isbn(base: 13))
+          expect(product_file).to be_valid
+        end
+
+        it "is valid with a valid isbn-10" do
+          product_file = build(:epub_product_file, isbn: Faker::Code.isbn)
           expect(product_file).to be_valid
         end
 
