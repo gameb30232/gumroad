@@ -57,25 +57,25 @@ class SubscriptionsController < ApplicationController
   end
 
   private
-      def check_can_manage
-        (@subscription = Subscription.find_by_external_id(params[:id])) || e404
-        e404 if @subscription.ended?
-        e404 if @subscription.is_installment_plan? && @subscription.charges_completed?
-        cookie = cookies.encrypted[@subscription.cookie_key]
-        return if cookie.present? && ActiveSupport::SecurityUtils.secure_compare(cookie, @subscription.external_id)
-        return if user_signed_in? && logged_in_user.is_team_member?
-        return if user_signed_in? && logged_in_user == @subscription.user
-        token = params[:token]
-        if token.present?
-          return if @subscription.token.present? && ActiveSupport::SecurityUtils.secure_compare(token, @subscription.token) && @subscription.token_expires_at > Time.current
-          return redirect_to magic_link_subscription_path(params[:id], { invalid: true })
-        end
-
-        respond_to do |format|
-          format.html { redirect_to magic_link_subscription_path(params[:id]) }
-          format.json { render json: { success: false, redirect_to: magic_link_subscription_path(params[:id]) } }
-        end
+    def check_can_manage
+      (@subscription = Subscription.find_by_external_id(params[:id])) || e404
+      e404 if @subscription.ended?
+      e404 if @subscription.is_installment_plan? && @subscription.charges_completed?
+      cookie = cookies.encrypted[@subscription.cookie_key]
+      return if cookie.present? && ActiveSupport::SecurityUtils.secure_compare(cookie, @subscription.external_id)
+      return if user_signed_in? && logged_in_user.is_team_member?
+      return if user_signed_in? && logged_in_user == @subscription.user
+      token = params[:token]
+      if token.present?
+        return if @subscription.token.present? && ActiveSupport::SecurityUtils.secure_compare(token, @subscription.token) && @subscription.token_expires_at > Time.current
+        return redirect_to magic_link_subscription_path(params[:id], { invalid: true })
       end
+
+      respond_to do |format|
+        format.html { redirect_to magic_link_subscription_path(params[:id]) }
+        format.json { render json: { success: false, redirect_to: magic_link_subscription_path(params[:id]) } }
+      end
+    end
 
     def set_subscription_confirmed_redirect_cookie
       cookies.encrypted[@subscription.cookie_key] = {
