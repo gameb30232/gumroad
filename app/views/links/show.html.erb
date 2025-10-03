@@ -1,5 +1,42 @@
 <% content_for :meta do %>
   <link href="<%= @product.long_url %>" rel="canonical">
+
+  <% if @product.native_type == Link::NATIVE_TYPE_EBOOK %>
+    <%
+      work_examples = []
+
+      book_files = @product.alive_product_files.select(&:supports_isbn?)
+
+      book_files.each do |file|
+        work_example = {
+          "@type" => "Book",
+          "bookFormat" => "EBook",
+          "name" => "#{@product.name} (#{file.filetype.upcase})"
+        }
+
+        work_example["isbn"] = file.isbn if file.isbn.present?
+
+        work_examples << work_example
+      end
+
+      structured_data = {
+        "@context" => "https://schema.org",
+        "@type" => "Book",
+        "name" => @product.name,
+        "author" => {
+          "@type" => "Person",
+          "name" => @product.user.name
+        },
+        "description" => @product.custom_summary.presence || strip_tags(@product.html_safe_description).truncate(160),
+        "url" => @product.long_url
+      }
+
+      structured_data["workExample"] = work_examples if work_examples.any?
+    %>
+    <script type="application/ld+json">
+      <%= structured_data.to_json.html_safe %>
+    </script>
+  <% end %>
 <% end %>
 
 <%= render("layouts/custom_styles/style") %>
