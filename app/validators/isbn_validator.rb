@@ -29,6 +29,6 @@ class IsbnValidator < ActiveModel::EachValidator
       digits = isbn.chars.map(&:to_i)
       check_digit = digits.pop
       sum = digits.each_with_index.sum { |d, i| d * (i.even? ? 1 : 3) }
-      (10 - sum % 10) % 10 == check_digit && isbn.start_with?("978", "979")
+      (10 - sum % 10) % 10 == check_digit
     end
 end

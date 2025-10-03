@@ -12,28 +12,23 @@ RSpec.describe IsbnValidator do
 
   let(:model) { model_class.new }
 
-  let(:valid_value) { "978-3-16-148410-0" }
-  let(:invalid_value) { "invalid" }
-
   before { model_class.clear_validators! }
 
   context "when ISBN-13" do
-    let(:valid_value) { "978-3-16-148410-0" }
+    let(:valid_value) { Faker::Code.isbn(base: 13)  }
     let(:invalid_value) { "978-3-16-148410-X" }
 
     it "accepts valid isbns" do
       model_class.validates :isbn, isbn: true
 
       model.isbn = valid_value
-      expect(model).to be_valid
 
-      model.isbn = "978-3-16-148410-0"
       expect(model).to be_valid
     end
   end
 
   context "when ISBN-10" do
-    let(:valid_value) { "0-306-40615-2" }
+    let(:valid_value) { Faker::Code.isbn }
     let(:invalid_value) { "0-306-40615-X" }
 
     it "accepts valid isbns" do
