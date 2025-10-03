@@ -867,6 +867,7 @@ describe ProductFile do
         it "doesn't allow isbn" do
           product_file = build(:streamable_video, isbn: "invalid-isbn")
           expect(product_file).to be_invalid
+          expect(product_file.errors.full_messages).to include("Isbn must be blank")
         end
       end
     end
