@@ -231,7 +231,7 @@ describe("File embeds in product content editor", type: :system, js: true) do
     end
   end
 
-  it "updates a file's name and description right away" do
+  it "updates a file's name, description, and ISBN right away" do
     product = create(:product, user: seller)
     product.product_files << create(:product_file, url: "https://s3.amazonaws.com/gumroad-specs/attachment/jimbo.pdf")
     create(:rich_content, entity: product, description: [{ "type" => "fileEmbed", "attrs" => { "id" => product.product_files.first.external_id, "uid" => SecureRandom.uuid } }])
@@ -241,11 +241,13 @@ describe("File embeds in product content editor", type: :system, js: true) do
     within find_embed(name: "jimmy") do
       click_on "Edit"
       fill_in "Description", with: "brand-new jimmy"
+      fill_in "ISBN", with: "978-3-16-148410-0"
     end
     save_change
     product.reload
     expect(product.product_files.first.name_displayable).to eq "jimmy"
     expect(product.product_files.first.description).to eq "brand-new jimmy"
+    expect(product.product_files.first.isbn).to eq "978-3-16-148410-0"
   end
 
   it "allows to rename files multiple times", :sidekiq_inline do
