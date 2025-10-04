@@ -10,9 +10,9 @@ import { showAlert } from "$app/components/server-components/Alert";
 
 type SaveState = { type: "initial" | "submitting" } | { type: "error"; message: string };
 
-export const ForgotPasswordForm = ({ onClose }: { onClose: () => void }) => {
+export const ForgotPasswordForm = ({ onClose, initialEmail }: { onClose: () => void; initialEmail?: string }) => {
   const uid = React.useId();
-  const [email, setEmail] = React.useState("");
+  const [email, setEmail] = React.useState(initialEmail ?? "");
   const [saveState, setSaveState] = React.useState<SaveState>({ type: "initial" });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

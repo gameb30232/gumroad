@@ -59,7 +59,7 @@ export const LoginPage = ({
       headerActions={<a href={Routes.signup_path({ next })}>Sign up</a>}
     >
       {showForgotPassword ? (
-        <ForgotPasswordForm onClose={() => setShowForgotPassword(false)} />
+        <ForgotPasswordForm onClose={() => setShowForgotPassword(false)} initialEmail={email} />
       ) : (
         <form onSubmit={(e) => void handleSubmit(e)}>
           <SocialAuth />
