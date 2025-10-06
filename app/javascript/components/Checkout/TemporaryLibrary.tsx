@@ -6,10 +6,10 @@ import { Creator } from "$app/components/Checkout/cartState";
 import { useState } from "$app/components/Checkout/payment";
 import { CreateAccountForm } from "$app/components/Checkout/Receipt";
 import { Result } from "$app/components/CheckoutPage";
+import { useClientAlert } from "$app/components/ClientAlertProvider";
 import { useLoggedInUser } from "$app/components/LoggedInUser";
 import { AuthorByline } from "$app/components/Product/AuthorByline";
 import { Thumbnail } from "$app/components/Product/Thumbnail";
-import { showAlert } from "$app/components/server-components/Alert";
 import { PageHeader } from "$app/components/ui/PageHeader";
 import { useRunOnce } from "$app/components/useRunOnce";
 
@@ -18,6 +18,7 @@ const formatName = (productName: string, optionName: string | null) =>
 
 export const TemporaryLibrary = ({ results, canBuyerSignUp }: { results: Result[]; canBuyerSignUp: boolean }) => {
   const user = useLoggedInUser();
+  const { showAlert } = useClientAlert();
 
   const [state] = useState();
 

@@ -26,6 +26,7 @@ import { CheckoutPreview } from "$app/components/CheckoutDashboard/CheckoutPrevi
 import { DiscountInput, InputtedDiscount } from "$app/components/CheckoutDashboard/DiscountInput";
 import { Layout, Page } from "$app/components/CheckoutDashboard/Layout";
 import { CrossSellModal, UpsellModal } from "$app/components/CheckoutPage";
+import { useClientAlert } from "$app/components/ClientAlertProvider";
 import { Details } from "$app/components/Details";
 import { Icon } from "$app/components/Icons";
 import { useLoggedInUser } from "$app/components/LoggedInUser";
@@ -33,7 +34,6 @@ import { Pagination, PaginationProps } from "$app/components/Pagination";
 import { Popover } from "$app/components/Popover";
 import { applySelection } from "$app/components/Product/ConfigurationSelector";
 import { Select } from "$app/components/Select";
-import { showAlert } from "$app/components/server-components/Alert";
 import { PageHeader } from "$app/components/ui/PageHeader";
 import { useDebouncedCallback } from "$app/components/useDebouncedCallback";
 import { Sort, useSortingTableDriver } from "$app/components/useSortingTableDriver";
@@ -87,6 +87,7 @@ export type UpsellsPageProps = {
 };
 
 const UpsellsPage = (props: UpsellsPageProps) => {
+  const { showAlert } = useClientAlert();
   const loggedInUser = useLoggedInUser();
   const isReadOnly = !loggedInUser?.policies.upsell.create;
 
@@ -521,7 +522,7 @@ const Form = ({
   isLoading: boolean;
 }) => {
   const uid = React.useId();
-
+  const { showAlert } = useClientAlert();
   const [name, setName] = React.useState<{ value: string; error?: boolean }>({ value: upsell?.name ?? "" });
   const [offerText, setOfferText] = React.useState<{ value: string; error?: boolean }>({ value: upsell?.text ?? "" });
   const [offerDescription, setOfferDescription] = React.useState(upsell?.description ?? "");

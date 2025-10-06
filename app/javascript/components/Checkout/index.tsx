@@ -14,6 +14,7 @@ import { assertResponseError } from "$app/utils/request";
 
 import { Button, NavigationButton } from "$app/components/Button";
 import { PaymentForm } from "$app/components/Checkout/PaymentForm";
+import { useClientAlert } from "$app/components/ClientAlertProvider";
 import { Popover } from "$app/components/Popover";
 import { Card } from "$app/components/Product/Card";
 import {
@@ -23,7 +24,6 @@ import {
   computeDiscountedPrice,
 } from "$app/components/Product/ConfigurationSelector";
 import { Thumbnail } from "$app/components/Product/Thumbnail";
-import { showAlert } from "$app/components/server-components/Alert";
 import { PageHeader } from "$app/components/ui/PageHeader";
 import { useIsAboveBreakpoint } from "$app/components/useIsAboveBreakpoint";
 import { useOriginalLocation } from "$app/components/useOriginalLocation";
@@ -72,6 +72,7 @@ export const Checkout = ({
   recommendedProducts?: CardProduct[] | null;
   setRecommendedProducts?: (prev: React.SetStateAction<CardProduct[] | null>) => void;
 }) => {
+  const { showAlert } = useClientAlert();
   const [state] = useState();
   const [newDiscountCode, setNewDiscountCode] = React.useState("");
   const [loadingDiscount, setLoadingDiscount] = React.useState(false);
