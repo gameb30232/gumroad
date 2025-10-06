@@ -137,7 +137,9 @@ class ApplicationController < ActionController::Base
     end
 
     def inertia_props(props = {})
-      RenderingExtension.custom_context(view_context).merge(props)
+      result = RenderingExtension.custom_context(view_context).merge(props)
+      result[:title] = @title if @title.present?
+      result
     end
 
   private

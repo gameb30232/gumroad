@@ -1,4 +1,4 @@
-import { createInertiaApp } from "@inertiajs/react";
+import { createInertiaApp, router } from "@inertiajs/react";
 import { createElement } from "react";
 import { createRoot } from "react-dom/client";
 
@@ -29,4 +29,10 @@ createInertiaApp({
     const root = createRoot(el);
     root.render(createElement(AppWrapper, { global }, createElement(App, props)));
   },
+});
+
+router.on("navigate", (event) => {
+  if (event.detail.page.props.title) {
+    document.title = event.detail.page.props.title;
+  }
 });
