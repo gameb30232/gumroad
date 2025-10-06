@@ -197,6 +197,7 @@ describe CustomerPresenter do
     end
 
     context "when purchase has no full_name" do
+      let(:product) { create(:product, user: seller) }
       let(:purchaser_with_name) { create(:user, name: "John Doe") }
       let(:purchase_with_purchaser) { create(:purchase, full_name: nil, purchaser: purchaser_with_name, link: product) }
       let(:purchase_without_purchaser) { create(:purchase, full_name: nil, purchaser: nil, link: product) }
