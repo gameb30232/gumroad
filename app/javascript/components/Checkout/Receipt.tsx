@@ -8,10 +8,10 @@ import { assertResponseError } from "$app/utils/request";
 import { Button, NavigationButton } from "$app/components/Button";
 import { CartItem } from "$app/components/Checkout/cartState";
 import { useState } from "$app/components/Checkout/payment";
-import { useClientAlert } from "$app/components/ClientAlertProvider";
 import { DiscordButton } from "$app/components/DiscordButton";
 import { Icon } from "$app/components/Icons";
 import { useLoggedInUser } from "$app/components/LoggedInUser";
+import { showAlert } from "$app/components/server-components/Alert";
 
 export const LineItem = ({
   name,
@@ -177,7 +177,6 @@ export const CreateAccountForm = ({
 }: {
   createAccountData: Pick<CreateAccountPayload, "email" | "cardParams" | "purchaseId">;
 }) => {
-  const { showAlert } = useClientAlert();
   const [password, setPassword] = React.useState("");
   const [status, setStatus] = React.useState<"idle" | "processing" | "success">("idle");
 

@@ -1,6 +1,6 @@
 import reverse from "lodash/reverse";
 import * as React from "react";
-import { cast } from "ts-safe-cast";
+import { createCast, cast } from "ts-safe-cast";
 
 import { SurchargesResponse } from "$app/data/customer_surcharge";
 import { startOrderCreation } from "$app/data/order";
@@ -16,6 +16,7 @@ import { formatOrderOfMagnitude } from "$app/utils/formatOrderOfMagnitude";
 import { calculateFirstInstallmentPaymentPriceCents } from "$app/utils/price";
 import { asyncVoid } from "$app/utils/promise";
 import { assertResponseError } from "$app/utils/request";
+import { register } from "$app/utils/serverComponentUtil";
 import { startTrackingForSeller, trackProductEvent } from "$app/utils/user_analytics";
 
 import { Button } from "$app/components/Button";
@@ -44,13 +45,13 @@ import {
 } from "$app/components/Checkout/payment";
 import { Receipt } from "$app/components/Checkout/Receipt";
 import { TemporaryLibrary } from "$app/components/Checkout/TemporaryLibrary";
-import { useClientAlert } from "$app/components/ClientAlertProvider";
 import { useFeatureFlags } from "$app/components/FeatureFlags";
 import { useLoggedInUser } from "$app/components/LoggedInUser";
 import { Modal } from "$app/components/Modal";
 import { AuthorByline } from "$app/components/Product/AuthorByline";
 import { computeOptionPrice, OptionRadioButton, Option } from "$app/components/Product/ConfigurationSelector";
 import { PriceTag } from "$app/components/Product/PriceTag";
+import { showAlert } from "$app/components/server-components/Alert";
 import { useAddThirdPartyAnalytics } from "$app/components/useAddThirdPartyAnalytics";
 import { useDebouncedCallback } from "$app/components/useDebouncedCallback";
 import { useOnChange, useOnChangeSync } from "$app/components/useOnChange";
@@ -70,7 +71,7 @@ const GUMROAD_PARAMS = [
   "pay_in_installments",
 ];
 
-export type CheckoutPageProps = {
+type Props = {
   discover_url: string;
   countries: Record<string, string>;
   us_states: string[];
@@ -155,9 +156,8 @@ export const CheckoutPage = ({
   tip_options,
   default_tip_option,
   ...props
-}: CheckoutPageProps) => {
+}: Props) => {
   const user = useLoggedInUser();
-  const { showAlert } = useClientAlert();
   const email = props.cart?.email ?? user?.email ?? "";
   const [cart, setCart] = React.useState<CartState>(() => {
     const initialCart = clear_cart ? newCartState() : (props.cart ?? newCartState());
@@ -688,7 +688,7 @@ export const CrossSellModal = ({
             </header>
             <footer>
               {crossSell.ratings ? (
-                <div className="rating">
+                <div className="flex shrink-0 items-center gap-1">
                   <span className="rating-average">{crossSell.ratings.average.toFixed(1)}</span>
                   <span>{`(${formatOrderOfMagnitude(crossSell.ratings.count, 1)})`}</span>
                 </div>
@@ -773,4 +773,4 @@ export const UpsellModal = ({
   );
 };
 
-export default CheckoutPage;
+export default register({ component: CheckoutPage, propParser: createCast() });

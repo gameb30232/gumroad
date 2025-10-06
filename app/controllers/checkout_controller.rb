@@ -4,10 +4,9 @@ class CheckoutController < ApplicationController
   before_action :process_cart_id_param, only: %i[index]
 
   def index
-    checkout_presenter = CheckoutPresenter.new(logged_in_user:, ip: request.remote_ip)
-
-    render inertia: "Checkout/Index",
-           props: inertia_props(**checkout_presenter.checkout_props(params: params, browser_guid: cookies[:_gumroad_guid]))
+    @hide_layouts = true
+    @on_checkout_page = true
+    @checkout_presenter = CheckoutPresenter.new(logged_in_user:, ip: request.remote_ip)
   end
 
   private
