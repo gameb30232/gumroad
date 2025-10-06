@@ -1,9 +1,6 @@
 import React from "react";
 
-import { classNames } from "$app/utils/classNames";
-
 import { Nav } from "$app/components/client-components/Nav";
-import { ClientAlertProvider, useClientAlert, ClientAlert } from "$app/components/ClientAlertProvider";
 import { CurrentSellerProvider, parseCurrentSeller } from "$app/components/CurrentSeller";
 import { DesignContextProvider, DesignSettings } from "$app/components/DesignSettings";
 import { DomainSettingsProvider } from "$app/components/DomainSettings";
@@ -61,23 +58,9 @@ type GlobalProps = {
   locale: string;
 };
 
-function AppContent({ children }: { children: React.ReactNode }) {
-  const isRouteLoading = useRouteLoading();
-  const { alert, isVisible } = useClientAlert();
-
-  return (
-    <>
-      <ClientAlert alert={alert} isVisible={isVisible} />
-      <div id="inertia-shell" className="flex h-screen flex-col lg:flex-row">
-        <Nav title="Dashboard" />
-        {isRouteLoading ? <LoadingSkeleton /> : null}
-        <main className={classNames("flex-1 overflow-y-auto", { hidden: isRouteLoading })}>{children}</main>
-      </div>
-    </>
-  );
-}
-
 export default function AppWrapper({ children, global }: { children: React.ReactNode; global: GlobalProps }) {
+  const isRouteLoading = useRouteLoading();
+
   return (
     <DesignContextProvider value={global.design_settings}>
       <DomainSettingsProvider
@@ -100,9 +83,11 @@ export default function AppWrapper({ children, global }: { children: React.React
           <LoggedInUserProvider value={parseLoggedInUser(global.logged_in_user)}>
             <CurrentSellerProvider value={parseCurrentSeller(global.current_seller)}>
               <SSRLocationProvider value={global.href}>
-                <ClientAlertProvider>
-                  <AppContent>{children}</AppContent>
-                </ClientAlertProvider>
+                <div id="inertia-shell" className="flex h-screen flex-col lg:flex-row">
+                  <Nav title="Dashboard" />
+                  {isRouteLoading ? <LoadingSkeleton /> : null}
+                  <main className={isRouteLoading ? "hidden" : "flex-1 overflow-y-auto"}>{children}</main>
+                </div>
               </SSRLocationProvider>
             </CurrentSellerProvider>
           </LoggedInUserProvider>
