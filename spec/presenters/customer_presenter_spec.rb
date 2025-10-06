@@ -194,21 +194,21 @@ describe CustomerPresenter do
           utm_link: nil,
         }
       )
+    end
 
-      context "when purchase has no full_name" do
-        let(:purchaser_with_name) { create(:user, name: "John Doe") }
-        let(:purchase_with_purchaser) { create(:purchase, full_name: nil, purchaser: purchaser_with_name, link: product) }
-        let(:purchase_without_purchaser) { create(:purchase, full_name: nil, purchaser: nil, link: product) }
+    context "when purchase has no full_name" do
+      let(:purchaser_with_name) { create(:user, name: "John Doe") }
+      let(:purchase_with_purchaser) { create(:purchase, full_name: nil, purchaser: purchaser_with_name, link: product) }
+      let(:purchase_without_purchaser) { create(:purchase, full_name: nil, purchaser: nil, link: product) }
 
-        it "falls back to purchaser name when purchaser exists" do
-          props = described_class.new(purchase: purchase_with_purchaser).customer(pundit_user:)
-          expect(props[:name]).to eq("John Doe")
-        end
+      it "falls back to purchaser name when purchaser exists" do
+        props = described_class.new(purchase: purchase_with_purchaser).customer(pundit_user:)
+        expect(props[:name]).to eq("John Doe")
+      end
 
-        it "returns empty string when neither full_name nor purchaser exists" do
-          props = described_class.new(purchase: purchase_without_purchaser).customer(pundit_user:)
-          expect(props[:name]).to eq("")
-        end
+      it "returns empty string when neither full_name nor purchaser exists" do
+        props = described_class.new(purchase: purchase_without_purchaser).customer(pundit_user:)
+        expect(props[:name]).to eq("")
       end
     end
 

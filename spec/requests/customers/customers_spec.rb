@@ -46,17 +46,17 @@ describe "Sales page", type: :system, js: true do
       expect(page).to have_table_row({ "Email" => "customer1@gumroad.com", "Name" => "Customer 1", "Product" => "Product 1", "Price" => "$1" })
       expect(page).to have_table_row({ "Email" => "customer2@gumroad.com", "Name" => "Customer 2", "Product" => "Membership", "Price" => "$2 a month" })
       expect(page).to have_table_row({ "Email" => "customer3hasaninsanelylonge...", "Name" => "Customer 3", "Product" => "Product 2Bundle", "Price" => "$3" })
+    end
 
-      it "displays purchaser name when full_name is blank" do
-        purchaser = create(:user, name: "Jane Smith")
-        create(:purchase, link: product1, full_name: nil, purchaser: purchaser, email: "jane@example.com", created_at: 5.seconds.ago, seller:)
-        index_model_records(Purchase)
+    it "displays purchaser name when full_name is blank" do
+      purchaser = create(:user, name: "Jane Smith")
+      create(:purchase, link: product1, full_name: nil, purchaser: purchaser, email: "jane@example.com", created_at: 5.seconds.ago, seller:)
+      index_model_records(Purchase)
 
-        login_as seller
-        visit customers_path
+      login_as seller
+      visit customers_path
 
-        expect(page).to have_table_row({ "Email" => "jane@example.com", "Name" => "Jane Smith", "Product" => "Product 1" })
-      end
+      expect(page).to have_table_row({ "Email" => "jane@example.com", "Name" => "Jane Smith", "Product" => "Product 1" })
     end
 
     it "sorts and paginates sales in the table" do
