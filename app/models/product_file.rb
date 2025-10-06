@@ -24,6 +24,12 @@ class ProductFile < ApplicationRecord
 
   has_one_attached :thumbnail
 
+  normalizes :isbn, with: ->(value) do
+    next if value.blank?
+
+    value.strip.upcase.gsub(/[\s\-–—−]/, "-")
+  end
+
   before_save :set_filegroup
   before_save :downcase_filetype
   after_commit :schedule_file_analyze, on: :create

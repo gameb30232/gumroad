@@ -5,7 +5,8 @@ class IsbnValidator < ActiveModel::EachValidator
     return if value.nil? && options[:allow_nil]
     return if value.blank? && options[:allow_blank]
 
-    normalized = value.gsub(/[\s-]/, "")
+    normalized = value.gsub(/[\s\-–—−]/, "")
+
     valid =
       if normalized.length == 10
         validate_with_isbn10(normalized)
@@ -27,8 +28,7 @@ class IsbnValidator < ActiveModel::EachValidator
 
     def validate_with_isbn13(isbn)
       digits = isbn.chars.map(&:to_i)
-      check_digit = digits.pop
-      sum = digits.each_with_index.sum { |d, i| d * (i.even? ? 1 : 3) }
-      (10 - sum % 10) % 10 == check_digit
+      sum = digits.each_with_index.sum { |d, i| i.even? ? d : 3 * d }  # 100
+      sum % 10 == 0
     end
 end

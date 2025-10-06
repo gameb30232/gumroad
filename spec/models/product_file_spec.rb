@@ -871,6 +871,28 @@ describe ProductFile do
         end
       end
     end
+
+    context "normalization" do
+      it "converts em and en dashes to ASCII dash" do
+        file = create(:pdf_product_file, isbn: "978–3—16−1484100")
+        expect(file.isbn).to eq("978-3-16-1484100")
+      end
+
+      it "upcases the string" do
+        file = create(:pdf_product_file, isbn: "978316148410x")
+        expect(file.isbn).to eq("978316148410X")
+      end
+
+      it "strips whitespace from the string" do
+        file = create(:pdf_product_file, isbn: "  978316148410X  ")
+        expect(file.isbn).to eq("978316148410X")
+      end
+
+      it "nullifies isbn if blank or only whitespace" do
+        file = create(:pdf_product_file, isbn: "   ")
+        expect(file.isbn).to be_nil
+      end
+    end
   end
 
   describe "scopes" do

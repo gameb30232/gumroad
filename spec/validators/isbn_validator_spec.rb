@@ -15,13 +15,32 @@ RSpec.describe IsbnValidator do
   before { model_class.clear_validators! }
 
   context "when ISBN-13" do
-    let(:valid_value) { Faker::Code.isbn(base: 13)  }
+    let(:valid_value) { Faker::Code.isbn(base: 13) }
+    let(:valid_value_digits) { valid_value.gsub(/[^0-9]/, "") }
     let(:invalid_value) { "978-3-16-148410-X" }
 
     it "accepts valid isbns" do
       model_class.validates :isbn, isbn: true
 
       model.isbn = valid_value
+
+      expect(model).to be_valid
+    end
+
+    it "accepts valid ISBN-13 with em dashes" do
+      model_class.validates :isbn, isbn: true
+
+      isbn_with_em_dashes = valid_value_digits.chars.each_slice(4).map { |s| s.join("—") }.join("—")
+      model.isbn = isbn_with_em_dashes
+
+      expect(model).to be_valid
+    end
+
+    it "accepts valid ISBN-13 with en dashes" do
+      model_class.validates :isbn, isbn: true
+
+      isbn_with_en_dashes = valid_value_digits.chars.each_slice(4).map { |s| s.join("–") }.join("–")
+      model.isbn = isbn_with_en_dashes
 
       expect(model).to be_valid
     end
