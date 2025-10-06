@@ -44,13 +44,13 @@ import {
 } from "$app/components/Checkout/payment";
 import { Receipt } from "$app/components/Checkout/Receipt";
 import { TemporaryLibrary } from "$app/components/Checkout/TemporaryLibrary";
+import { useClientAlert } from "$app/components/ClientAlertProvider";
 import { useFeatureFlags } from "$app/components/FeatureFlags";
 import { useLoggedInUser } from "$app/components/LoggedInUser";
 import { Modal } from "$app/components/Modal";
 import { AuthorByline } from "$app/components/Product/AuthorByline";
 import { computeOptionPrice, OptionRadioButton, Option } from "$app/components/Product/ConfigurationSelector";
 import { PriceTag } from "$app/components/Product/PriceTag";
-import { showAlert } from "$app/components/server-components/Alert";
 import { useAddThirdPartyAnalytics } from "$app/components/useAddThirdPartyAnalytics";
 import { useDebouncedCallback } from "$app/components/useDebouncedCallback";
 import { useOnChange, useOnChangeSync } from "$app/components/useOnChange";
@@ -157,6 +157,7 @@ export const CheckoutPage = ({
   ...props
 }: CheckoutPageProps) => {
   const user = useLoggedInUser();
+  const { showAlert } = useClientAlert();
   const email = props.cart?.email ?? user?.email ?? "";
   const [cart, setCart] = React.useState<CartState>(() => {
     const initialCart = clear_cart ? newCartState() : (props.cart ?? newCartState());
