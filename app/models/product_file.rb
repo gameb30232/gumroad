@@ -27,7 +27,7 @@ class ProductFile < ApplicationRecord
   normalizes :isbn, with: ->(value) do
     next if value.blank?
 
-    value.strip.upcase.gsub(/[\s\-–—−]/, "-")
+    value.strip.upcase.gsub(/[\s–—−]/, "-")
   end
 
   before_save :set_filegroup

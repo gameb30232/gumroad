@@ -816,6 +816,33 @@ describe ProductFile do
   end
 
   describe "isbn" do
+    context "normalization" do
+      it "converts em and en dashes to ASCII dash" do
+        file = create(:pdf_product_file, isbn: "978–3—16−1484100")
+        expect(file.isbn).to eq("978-3-16-1484100")
+      end
+
+      it "converts whitespaces to ASCII dash" do
+        file = create(:pdf_product_file, isbn: "978 3 16 1484100")
+        expect(file.isbn).to eq("978-3-16-1484100")
+      end
+
+      it "upcases the string" do
+        file = create(:pdf_product_file, isbn: "978316148410x")
+        expect(file.isbn).to eq("978316148410X")
+      end
+
+      it "strips whitespace from the string" do
+        file = create(:pdf_product_file, isbn: "  978316148410X  ")
+        expect(file.isbn).to eq("978316148410X")
+      end
+
+      it "nullifies isbn if blank or only whitespace" do
+        file = create(:pdf_product_file, isbn: "   ")
+        expect(file.isbn).to be_nil
+      end
+    end
+
     context "validation" do
       context "when pdf" do
         it "is valid with a valid isbn-13" do
@@ -869,28 +896,6 @@ describe ProductFile do
           expect(product_file).to be_invalid
           expect(product_file.errors.full_messages).to include("Isbn must be blank")
         end
-      end
-    end
-
-    context "normalization" do
-      it "converts em and en dashes to ASCII dash" do
-        file = create(:pdf_product_file, isbn: "978–3—16−1484100")
-        expect(file.isbn).to eq("978-3-16-1484100")
-      end
-
-      it "upcases the string" do
-        file = create(:pdf_product_file, isbn: "978316148410x")
-        expect(file.isbn).to eq("978316148410X")
-      end
-
-      it "strips whitespace from the string" do
-        file = create(:pdf_product_file, isbn: "  978316148410X  ")
-        expect(file.isbn).to eq("978316148410X")
-      end
-
-      it "nullifies isbn if blank or only whitespace" do
-        file = create(:pdf_product_file, isbn: "   ")
-        expect(file.isbn).to be_nil
       end
     end
   end

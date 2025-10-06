@@ -27,22 +27,22 @@ RSpec.describe IsbnValidator do
       expect(model).to be_valid
     end
 
-    it "accepts valid ISBN-13 with em dashes" do
+    it "rejects ISBN-13 with em dashes" do
       model_class.validates :isbn, isbn: true
 
       isbn_with_em_dashes = valid_value_digits.chars.each_slice(4).map { |s| s.join("—") }.join("—")
       model.isbn = isbn_with_em_dashes
 
-      expect(model).to be_valid
+      expect(model).not_to be_valid
     end
 
-    it "accepts valid ISBN-13 with en dashes" do
+    it "rejects ISBN-13 with en dashes" do
       model_class.validates :isbn, isbn: true
 
       isbn_with_en_dashes = valid_value_digits.chars.each_slice(4).map { |s| s.join("–") }.join("–")
       model.isbn = isbn_with_en_dashes
 
-      expect(model).to be_valid
+      expect(model).not_to be_valid
     end
   end
 
