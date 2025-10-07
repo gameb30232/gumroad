@@ -127,6 +127,15 @@ describe "Login Feature Scenario", js: true, type: :system do
   end
 
   describe "reset password" do
+    it "prefills the email from the login form into the forgot password form" do
+      visit login_path
+
+      fill_in "Email", with: user.email
+      click_on "Forgot your password?"
+
+      expect(find_field("Email to send reset instructions to").value).to eq(user.email)
+    end
+
     it "sends a reset password email" do
       visit login_path
 
