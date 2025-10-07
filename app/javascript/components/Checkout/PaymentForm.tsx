@@ -1222,7 +1222,7 @@ export const PaymentForm = ({
           </div>
         </div>
       ) : null}
-      {isTippingEnabled(state) ? <TipSelector key="tip-editor" /> : null}
+      {isTippingEnabled(state) ? <TipSelector /> : null}
       {isTestPurchase || !requiresPayment(state) ? (
         <>
           <EmailAddress />
