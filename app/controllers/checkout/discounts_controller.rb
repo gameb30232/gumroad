@@ -15,7 +15,7 @@ class Checkout::DiscountsController < Sellers::BaseController
     presenter = Checkout::DiscountsPresenter.new(pundit_user:, offer_codes:, pagination:)
 
     render inertia: "Checkout/Discounts/Index",
-           props: inertia_props(**presenter.discounts_props)
+           props: presenter.discounts_props
   end
 
   def paged

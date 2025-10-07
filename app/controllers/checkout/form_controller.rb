@@ -8,7 +8,7 @@ class Checkout::FormController < Sellers::BaseController
     form_props = Checkout::FormPresenter.new(pundit_user:).form_props
 
     render inertia: "Checkout/Form/Show",
-           props: inertia_props(**form_props)
+           props: form_props
   end
 
   def update

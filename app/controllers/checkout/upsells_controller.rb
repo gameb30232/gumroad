@@ -13,7 +13,7 @@ class Checkout::UpsellsController < Sellers::BaseController
     upsells_props = Checkout::UpsellsPresenter.new(pundit_user:, pagination:, upsells:).upsells_props
 
     render inertia: "Checkout/Upsells/Index",
-           props: inertia_props(**upsells_props)
+           props: upsells_props
   end
 
   def paged
