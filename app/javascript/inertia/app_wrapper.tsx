@@ -1,17 +1,12 @@
 import React from "react";
 
-import { classNames } from "$app/utils/classNames";
-
-import { Nav } from "$app/components/client-components/Nav";
-import { ClientAlertProvider, useClientAlert, ClientAlert } from "$app/components/ClientAlertProvider";
+import { ClientAlertProvider } from "$app/components/ClientAlertProvider";
 import { CurrentSellerProvider, parseCurrentSeller } from "$app/components/CurrentSeller";
 import { DesignContextProvider, DesignSettings } from "$app/components/DesignSettings";
 import { DomainSettingsProvider } from "$app/components/DomainSettings";
-import LoadingSkeleton from "$app/components/LoadingSkeleton";
 import { LoggedInUserProvider, parseLoggedInUser } from "$app/components/LoggedInUser";
 import { SSRLocationProvider } from "$app/components/useOriginalLocation";
 import { UserAgentProvider } from "$app/components/UserAgent";
-import useRouteLoading from "$app/components/useRouteLoading";
 
 type GlobalProps = {
   design_settings: DesignSettings;
@@ -61,22 +56,6 @@ type GlobalProps = {
   locale: string;
 };
 
-function AppContent({ children }: { children: React.ReactNode }) {
-  const isRouteLoading = useRouteLoading();
-  const { alert, isVisible } = useClientAlert();
-
-  return (
-    <>
-      <ClientAlert alert={alert} isVisible={isVisible} />
-      <div id="inertia-shell" className="flex h-screen flex-col lg:flex-row">
-        <Nav title="Dashboard" />
-        {isRouteLoading ? <LoadingSkeleton /> : null}
-        <main className={classNames("flex-1 overflow-y-auto", { hidden: isRouteLoading })}>{children}</main>
-      </div>
-    </>
-  );
-}
-
 export default function AppWrapper({ children, global }: { children: React.ReactNode; global: GlobalProps }) {
   return (
     <DesignContextProvider value={global.design_settings}>
@@ -100,9 +79,7 @@ export default function AppWrapper({ children, global }: { children: React.React
           <LoggedInUserProvider value={parseLoggedInUser(global.logged_in_user)}>
             <CurrentSellerProvider value={parseCurrentSeller(global.current_seller)}>
               <SSRLocationProvider value={global.href}>
-                <ClientAlertProvider>
-                  <AppContent>{children}</AppContent>
-                </ClientAlertProvider>
+                <ClientAlertProvider>{children}</ClientAlertProvider>
               </SSRLocationProvider>
             </CurrentSellerProvider>
           </LoggedInUserProvider>
