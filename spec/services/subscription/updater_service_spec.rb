@@ -2879,6 +2879,7 @@ describe Subscription::UpdaterService, :vcr do
           params: { is_resubscribing: true },
           logged_in_user: subscription.user,
           remote_ip: "127.0.0.1",
+          gumroad_guid: "abc123",
         ).perform
 
         expect(result[:success]).to eq(false)
