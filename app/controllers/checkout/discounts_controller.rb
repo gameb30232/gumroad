@@ -107,8 +107,8 @@ class Checkout::DiscountsController < Sellers::BaseController
     end
 
     def parse_date_times
-      offer_code_params[:valid_at] = Date.parse(offer_code_params[:valid_at]) if offer_code_params[:valid_at].present?
-      offer_code_params[:expires_at] = Date.parse(offer_code_params[:expires_at]) if offer_code_params[:expires_at].present?
+      offer_code_params[:valid_at] = Time.zone.parse(offer_code_params[:valid_at]) if offer_code_params[:valid_at].present?
+      offer_code_params[:expires_at] = Time.zone.parse(offer_code_params[:expires_at]) if offer_code_params[:expires_at].present?
     end
 
     def fetch_offer_codes

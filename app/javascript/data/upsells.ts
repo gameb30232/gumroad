@@ -131,7 +131,7 @@ export const pauseUpsell = async (id: string) => {
   const response = await request({
     method: "POST",
     accept: "json",
-    url: Routes.checkout_upsell_pause_url(id),
+    url: Routes.checkout_upsell_pause_path(id),
   });
   if (!response.ok) throw new ResponseError();
 };
@@ -140,7 +140,7 @@ export const resumeUpsell = async (id: string) => {
   const response = await request({
     method: "DELETE",
     accept: "json",
-    url: Routes.checkout_upsell_pause_url(id),
+    url: Routes.checkout_upsell_pause_path(id),
   });
   if (!response.ok) throw new ResponseError();
 };
