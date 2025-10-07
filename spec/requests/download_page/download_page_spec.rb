@@ -380,7 +380,7 @@ describe("Download Page", type: :system, js: true) do
       before do
         product = subscription.link
         subscription.update_columns(charge_occurrence_count: product.installment_plan.number_of_installments)
-        
+
         (product.installment_plan.number_of_installments - 1).times do
           create(:purchase, link: product, subscription: subscription, purchaser: subscription.user)
         end
