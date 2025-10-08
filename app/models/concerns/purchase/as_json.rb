@@ -316,7 +316,7 @@ module Purchase::AsJson
         license: { original: true, only: [:serial] }
       }
     ).merge(
-      offer_code: {
+      offer_code: offer_code && {
         code: offer_code.code,
         displayed_amount_off: offer_code.displayed_amount_off(link.price_currency_type, with_symbol: true)
       },
