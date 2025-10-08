@@ -32,6 +32,7 @@ import { WithTooltip } from "$app/components/WithTooltip";
 
 import { CartState, convertToUSD, hasFreeTrial, getDiscountedPrice, CartItem, findCartItem } from "./cartState";
 import { computeTip, computeTipForPrice, getTotalPrice, isProcessing, useState } from "./payment";
+import { TipSelector } from "./TipSelector";
 
 import placeholder from "$assets/images/placeholders/checkout.png";
 
@@ -344,6 +345,7 @@ export const Checkout = ({
                   </>
                 ) : null}
               </div>
+              <TipSelector />
               {recommendedProducts && recommendedProducts.length > 0 ? (
                 <section className="paragraphs">
                   <h2>Customers who bought {cart.items.length === 1 ? "this item" : "these items"} also bought</h2>
