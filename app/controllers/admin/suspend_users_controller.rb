@@ -4,7 +4,7 @@ class Admin::SuspendUsersController < Admin::BaseController
   # IDs can be separated by whitespaces or commas
   ID_DELIMITER_REGEX = /\s|,/
 
-  layout "admin_inertia", only: :show
+  layout "admin", only: :show
 
   def show
     @title = "Mass-suspend users"

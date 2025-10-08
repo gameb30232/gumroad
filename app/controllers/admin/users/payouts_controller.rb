@@ -10,8 +10,6 @@ class Admin::Users::PayoutsController < Admin::Users::BaseController
   RECORDS_PER_PAGE = 20
   private_constant :RECORDS_PER_PAGE
 
-  layout "admin_inertia", only: [:index, :show]
-
   def index
     @title = "Payouts"
 

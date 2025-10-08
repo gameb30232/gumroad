@@ -7,10 +7,6 @@ module Admin::ListPaginatedPurchases
 
   RECORDS_PER_PAGE = 25
 
-  included do
-    layout "admin_inertia"
-  end
-
   def index
     @title = page_title
 

@@ -3,8 +3,7 @@
 class Admin::BaseController < ApplicationController
   include ActionView::Helpers::DateHelper, ActionView::Helpers::NumberHelper, AdminActionTracker, Impersonate, AdminHelper
 
-  # layout "admin"
-  layout "admin_inertia", only: :index
+  layout "admin"
 
   inertia_share do
     RenderingExtension.custom_context(view_context).merge(
@@ -19,10 +18,6 @@ class Admin::BaseController < ApplicationController
 
   before_action :require_admin!
   before_action :hide_layouts
-
-  before_action do
-    @body_id = "admin"
-  end
 
   def index
     @title = "Admin"

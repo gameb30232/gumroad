@@ -8,8 +8,6 @@ class Admin::UsersController < Admin::BaseController
 
   before_action :fetch_user, except: %i[block_ip_address]
 
-  layout "admin_inertia", only: :show
-
   def show
     @title = "#{@user.display_name} on Gumroad"
 

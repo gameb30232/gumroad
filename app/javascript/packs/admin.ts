@@ -1,38 +1,48 @@
-// import "@hotwired/turbo-rails";
+import { createInertiaApp } from "@inertiajs/react";
+import React, { createElement } from "react";
+import { createRoot } from "react-dom/client";
 
-import Clipboard from "clipboard";
-// import ReactOnRails from "react-on-rails";
+import AdminAppWrapper, { GlobalProps } from "../inertia/admin_app_wrapper";
+import Layout from "../layouts/Admin";
 
-import BasePage from "$app/utils/base_page";
+const AdminLayout = (page: React.ReactNode) => React.createElement(Layout, { children: page });
 
-// import AdminNav from "$app/components/server-components/Admin/Nav";
-// import AdminSalesReportsPage from "$app/components/server-components/Admin/SalesReportsPage";
-// import AdminSearchPopover from "$app/components/server-components/Admin/SearchPopover";
+type PageComponent = React.ComponentType & { layout?: (page: React.ReactNode) => React.ReactElement };
 
-BasePage.initialize();
-// ReactOnRails.register({ AdminNav, AdminSearchPopover, AdminSalesReportsPage });
+const isPageComponent = (value: unknown): value is PageComponent => typeof value === "function";
 
-let clipboard: Clipboard | null = null;
-
-// Supplements AdminHelper#copy_to_clipboard.
-function registerClipboardHandlers() {
-  if (clipboard) {
-    clipboard.destroy();
-  }
-
-  clipboard = new Clipboard("[data-clipboard-text]");
-
-  clipboard.on("success", (e: Clipboard.Event) => {
-    const tooltip = e.trigger.closest(".has-tooltip")?.querySelector<HTMLElement>("[role='tooltip']");
-
-    if (tooltip) {
-      const original = tooltip.textContent || "";
-      tooltip.textContent = "Copied!";
-      setTimeout(() => (tooltip.textContent = original), 2000);
+const resolvePageComponent = async (name: string): Promise<PageComponent> => {
+  try {
+    const page: unknown = await import(`../pages/${name}.tsx`);
+    if (page && typeof page === "object" && "default" in page && isPageComponent(page.default)) {
+      const component = page.default;
+      component.layout = AdminLayout;
+      return component;
     }
+    throw new Error(`Invalid page component: ${name}`);
+  } catch {
+    try {
+      const page: unknown = await import(`../pages/${name}.jsx`);
+      if (page && typeof page === "object" && "default" in page && isPageComponent(page.default)) {
+        const component = page.default;
+        component.layout = AdminLayout;
+        return component;
+      }
+      throw new Error(`Invalid page component: ${name}`);
+    } catch {
+      throw new Error(`Admin page component not found: ${name}`);
+    }
+  }
+};
 
-    e.clearSelection();
-  });
-}
+void createInertiaApp<GlobalProps>({
+  progress: false,
+  resolve: (name: string) => resolvePageComponent(name),
+  setup({ el, App, props }) {
+    const global = props.initialPage.props;
 
-document.addEventListener("DOMContentLoaded", registerClipboardHandlers);
+    const root = createRoot(el);
+    root.render(createElement(AdminAppWrapper, { global, children: createElement(App, props) }));
+  },
+  title: (title: string) => (title ? `${title} - Admin` : "Admin"),
+});

@@ -3,8 +3,6 @@
 class Admin::RefundQueuesController < Admin::BaseController
   include Pagy::Backend
 
-  layout "admin_inertia"
-
   def show
     @title = "Refund queue"
 

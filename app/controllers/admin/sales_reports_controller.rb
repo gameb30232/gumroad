@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Admin::SalesReportsController < Admin::BaseController
-  layout "admin_inertia", only: :index
-
   def index
     @title = "Sales reports"
 

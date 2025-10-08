@@ -3,8 +3,6 @@
 class Admin::UnblockEmailDomainsController < Admin::BaseController
   include MassUnblocker
 
-  layout "admin_inertia", only: :show
-
   def show
     @title = "Mass-unblock email domains"
 

@@ -3,8 +3,6 @@
 class Admin::MerchantAccountsController < Admin::BaseController
   before_action :set_merchant_account, only: [:show]
 
-  layout "admin_inertia", only: :show
-
   before_action(only: :show) { @title = "Merchant Account #{@merchant_account.id}" }
 
   def show

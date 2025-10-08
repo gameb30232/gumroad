@@ -3,8 +3,6 @@
 class Admin::PurchasesController < Admin::BaseController
   include Admin::FetchPurchase
 
-  layout "admin_inertia", only: :show
-
   before_action :fetch_purchase,
                 only: %i[
                   show

@@ -1,26 +1,16 @@
 import React from "react";
-import { cast } from "ts-safe-cast";
-
-interface InertiaEvent extends Event {
-  detail: {
-    visit: {
-      prefetch: boolean;
-      preserveScroll: boolean;
-      only: string[];
-    };
-  };
-}
 
 const useRouteLoading = () => {
   const [isRouteLoading, setIsRouteLoading] = React.useState(false);
 
   React.useEffect(() => {
-    const startHandler = (event: Event) => {
-      const { prefetch, preserveScroll, only = [] } = cast<InertiaEvent>(event).detail.visit;
+    const startHandler = (event: DocumentEventMap["inertia:start"]) => {
+      const { prefetch, only = [] } = event.detail.visit;
+      const preserveScroll = event.detail.visit.preserveScroll !== false;
       setIsRouteLoading(!prefetch && !preserveScroll && only.length === 0);
     };
 
-    const finishHandler = (_event: Event) => setIsRouteLoading(false);
+    const finishHandler = (_event: DocumentEventMap["inertia:finish"]) => setIsRouteLoading(false);
 
     document.addEventListener("inertia:start", startHandler);
     document.addEventListener("inertia:finish", finishHandler);

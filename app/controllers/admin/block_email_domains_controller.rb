@@ -3,8 +3,6 @@
 class Admin::BlockEmailDomainsController < Admin::BaseController
   include MassBlocker
 
-  layout "admin_inertia", only: :show
-
   def show
     @title = "Mass-block email domains"
     render inertia: "Admin/BlockEmailDomains/Show"

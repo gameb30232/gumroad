@@ -3,24 +3,6 @@ import "abortcontroller-polyfill/dist/abortcontroller-polyfill-only";
 import "whatwg-fetch";
 import ReactOnRails from "react-on-rails";
 
-import AdminActionButton from "$app/components/server-components/Admin/ActionButton";
-import AdminAddCommentForm from "$app/components/server-components/Admin/AddCommentForm";
-import AdminAddCreditForm from "$app/components/server-components/Admin/AddCreditForm";
-import AdminChangeEmailForm from "$app/components/server-components/Admin/ChangeEmailForm";
-import AdminFlagForFraudForm from "$app/components/server-components/Admin/FlagForFraudForm";
-import AdminManualPayoutForm from "$app/components/server-components/Admin/ManualPayoutForm";
-import AdminMassTransferPurchasesForm from "$app/components/server-components/Admin/MassTransferPurchasesForm";
-import AdminNav from "$app/components/server-components/Admin/Nav";
-import AdminPausePayoutsForm from "$app/components/server-components/Admin/PausePayoutsForm";
-import AdminProductAttributesAndInfo from "$app/components/server-components/Admin/ProductAttributesAndInfo";
-import AdminProductPurchases from "$app/components/server-components/Admin/ProductPurchases";
-import AdminProductStats from "$app/components/server-components/Admin/ProductStats";
-import AdminSalesReportsPage from "$app/components/server-components/Admin/SalesReportsPage";
-import AdminSetCustomFeeForm from "$app/components/server-components/Admin/SetCustomFeeForm";
-import AdminSuspendForFraudForm from "$app/components/server-components/Admin/SuspendForFraudForm";
-import AdminSuspendForTosForm from "$app/components/server-components/Admin/SuspendForTosForm";
-import AdminUserGuids from "$app/components/server-components/Admin/UserGuids";
-import AdminUserStats from "$app/components/server-components/Admin/UserStats";
 import AffiliatedPage from "$app/components/server-components/AffiliatedPage";
 import AffiliateRequestPage from "$app/components/server-components/AffiliateRequestPage";
 import AffiliatesPage from "$app/components/server-components/AffiliatesPage";
@@ -103,30 +85,12 @@ import WishlistsPage from "$app/components/server-components/WishlistsPage";
 import WorkflowsPage from "$app/components/server-components/WorkflowsPage";
 
 ReactOnRails.register({
-  AdminActionButton,
-  AdminAddCommentForm,
-  AdminChangeEmailForm,
-  AdminFlagForFraudForm,
-  AdminManualPayoutForm,
-  AdminMassTransferPurchasesForm,
-  AdminNav,
-  AdminPausePayoutsForm,
-  AdminProductAttributesAndInfo,
-  AdminProductPurchases,
-  AdminProductStats,
-  AdminSalesReportsPage,
-  AdminSetCustomFeeForm,
-  AdminSuspendForFraudForm,
-  AdminSuspendForTosForm,
-  AdminUserGuids,
-  AdminUserStats,
   AdvancedSettingsPage,
   AffiliatedPage,
   AffiliateRequestPage,
   AffiliatesPage,
   Alert,
   AnalyticsPage,
-  AdminAddCreditForm,
   ApplicationEditPage,
   ArchivedProductsPage,
   HelpCenterArticlesIndexPage,

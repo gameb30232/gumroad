@@ -3,8 +3,6 @@
 class Admin::ProductsController < Admin::BaseController
   include Admin::FetchProduct
 
-  layout "admin_inertia"
-
   before_action :fetch_product_by_general_permalink
 
   def show

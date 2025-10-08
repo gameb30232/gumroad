@@ -3,8 +3,6 @@
 class Admin::ActionCallDashboardController < Admin::BaseController
   include Pagy::Backend
 
-  layout "admin_inertia", only: :show
-
   RECORDS_PER_PAGE = 15
 
   def show

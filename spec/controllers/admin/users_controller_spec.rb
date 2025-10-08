@@ -231,8 +231,6 @@ describe Admin::UsersController do
         expect(user.reload.custom_fee_per_thousand).to eq 50
       end
     end
-
-
   end
 
   describe "POST #toggle_adult_products" do

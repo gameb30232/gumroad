@@ -78,10 +78,6 @@ module AdminHelper
     with_tooltip(tip: content) { icon("solid-shield-exclamation", style: "color: rgb(var(--warning))") }
   end
 
-  def admin_action(props)
-    react_component("AdminActionButton", props:, prerender: true)
-  end
-
   def copy_to_clipboard(text, &block)
     tag.div(class: "inline-flex items-center gap-1") do
       concat block_given? ? capture(&block) : tag.span(text)
