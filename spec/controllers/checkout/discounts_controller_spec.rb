@@ -62,7 +62,7 @@ describe Checkout::DiscountsController do
       let(:record) { OfferCode }
     end
 
-    it "returns HTTP success and renders correct inertia props" do
+    it "returns HTTP success and renders correct JSON response" do
       get :paged, params: { page: 1 }
       expect(response).to be_successful
 
