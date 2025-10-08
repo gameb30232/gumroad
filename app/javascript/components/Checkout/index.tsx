@@ -4,6 +4,7 @@ import { computeOfferDiscount } from "$app/data/offer_code";
 import { getRecommendedProducts } from "$app/data/recommended_products";
 import { CardProduct, COMMISSION_DEPOSIT_PROPORTION } from "$app/parsers/product";
 import { isOpenTuple } from "$app/utils/array";
+import { classNames } from "$app/utils/classNames";
 import { formatUSDCentsWithExpandedCurrencySymbol } from "$app/utils/currency";
 import { formatCallDate } from "$app/utils/date";
 import { variantLabel } from "$app/utils/labels";
@@ -24,6 +25,7 @@ import {
 } from "$app/components/Product/ConfigurationSelector";
 import { Thumbnail } from "$app/components/Product/Thumbnail";
 import { showAlert } from "$app/components/server-components/Alert";
+import { Skeleton } from "$app/components/Skeleton";
 import { PageHeader } from "$app/components/ui/PageHeader";
 import { useIsAboveBreakpoint } from "$app/components/useIsAboveBreakpoint";
 import { useOriginalLocation } from "$app/components/useOriginalLocation";
@@ -58,6 +60,23 @@ const nameOfSalesTaxForCountry = (countryCode: string) => {
     default:
       return "VAT";
   }
+};
+
+const PriceDisplay = ({
+  value,
+  loading,
+  skeletonWidth = "w-16",
+  skeletonHeight = "h-4",
+}: {
+  value: number | null;
+  loading: boolean;
+  skeletonWidth?: string;
+  skeletonHeight?: string;
+}) => {
+  if (loading || value === null) {
+    return <Skeleton className={classNames(skeletonHeight, skeletonWidth)} />;
+  }
+  return <>{formatPrice(value)}</>;
 };
 
 export const Checkout = ({
@@ -202,6 +221,8 @@ export const Checkout = ({
   }, 0);
 
   const isDesktop = useIsAboveBreakpoint("lg");
+  const isLoading = state.surcharges.type === "pending" || state.surcharges.type === "loading";
+  const surcharges = state.surcharges.type === "loaded" ? state.surcharges.result : null;
 
   return (
     <div className="mx-auto w-full max-w-product-page">
@@ -227,37 +248,33 @@ export const Checkout = ({
                   />
                 ))}
                 <div className="cart-summary">
-                  {state.surcharges.type === "loaded" ? (
-                    <>
-                      <div>
-                        <h4>Subtotal</h4>
-                        <div>{formatPrice(subtotal)}</div>
-                      </div>
-                      {tip ? (
-                        <div>
-                          <h4>Tip</h4>
-                          <div>{formatPrice(tip)}</div>
-                        </div>
-                      ) : null}
-                      {state.surcharges.result.tax_included_cents ? (
-                        <div>
-                          <h4>{nameOfSalesTaxForCountry(state.country)} (included)</h4>
-                          <div>{formatPrice(state.surcharges.result.tax_included_cents)}</div>
-                        </div>
-                      ) : null}
-                      {state.surcharges.result.tax_cents ? (
-                        <div>
-                          <h4>{nameOfSalesTaxForCountry(state.country)}</h4>
-                          <div>{formatPrice(state.surcharges.result.tax_cents)}</div>
-                        </div>
-                      ) : null}
-                      {state.surcharges.result.shipping_rate_cents ? (
-                        <div>
-                          <h4>Shipping rate</h4>
-                          <div>{formatPrice(state.surcharges.result.shipping_rate_cents)}</div>
-                        </div>
-                      ) : null}
-                    </>
+                  <div>
+                    <h4>Subtotal</h4>
+                    <div>{formatPrice(subtotal)}</div>
+                  </div>
+                  {tip > 0 ? (
+                    <div>
+                      <h4>Tip</h4>
+                      <div>{formatPrice(tip)}</div>
+                    </div>
+                  ) : null}
+                  {surcharges?.tax_included_cents ? (
+                    <div>
+                      <h4>{nameOfSalesTaxForCountry(state.country)} (included)</h4>
+                      <div>{formatPrice(surcharges.tax_included_cents)}</div>
+                    </div>
+                  ) : null}
+                  {surcharges?.tax_cents ? (
+                    <div>
+                      <h4>{nameOfSalesTaxForCountry(state.country)}</h4>
+                      <div>{formatPrice(surcharges.tax_cents)}</div>
+                    </div>
+                  ) : null}
+                  {surcharges?.shipping_rate_cents ? (
+                    <div>
+                      <h4>Shipping rate</h4>
+                      <div>{formatPrice(surcharges.shipping_rate_cents)}</div>
+                    </div>
                   ) : null}
                   {visibleDiscounts.length || discount > 0 ? (
                     <div>
@@ -314,35 +331,38 @@ export const Checkout = ({
                     </form>
                   ) : null}
                 </div>
-                {total != null ? (
-                  <>
-                    <footer>
-                      <h4>Total</h4>
-                      <div>{formatPrice(total)}</div>
-                    </footer>
-                    {commissionCompletionTotal > 0 || futureInstallmentsWithoutTipsTotal > 0 ? (
-                      <div className="cart-summary">
-                        <div>
-                          <h4>Payment today</h4>
-                          <div>
-                            {formatPrice(total - commissionCompletionTotal - futureInstallmentsWithoutTipsTotal)}
-                          </div>
-                        </div>
-                        {commissionCompletionTotal > 0 ? (
-                          <div>
-                            <h4>Payment after completion</h4>
-                            <div>{formatPrice(commissionCompletionTotal)}</div>
-                          </div>
-                        ) : null}
-                        {futureInstallmentsWithoutTipsTotal > 0 ? (
-                          <div>
-                            <h4>Future installments</h4>
-                            <div>{formatPrice(futureInstallmentsWithoutTipsTotal)}</div>
-                          </div>
-                        ) : null}
+                <footer>
+                  <h4>Total</h4>
+                  <div>
+                    <PriceDisplay value={total} loading={isLoading} skeletonWidth="w-20" skeletonHeight="h-5" />
+                  </div>
+                </footer>
+                {total != null && (commissionCompletionTotal > 0 || futureInstallmentsWithoutTipsTotal > 0) ? (
+                  <div className="cart-summary">
+                    <div>
+                      <h4>Payment today</h4>
+                      <div>
+                        <PriceDisplay
+                          value={total - commissionCompletionTotal - futureInstallmentsWithoutTipsTotal}
+                          loading={isLoading}
+                          skeletonWidth="w-16"
+                          skeletonHeight="h-5"
+                        />
+                      </div>
+                    </div>
+                    {commissionCompletionTotal > 0 ? (
+                      <div>
+                        <h4>Payment after completion</h4>
+                        <div>{formatPrice(commissionCompletionTotal)}</div>
                       </div>
                     ) : null}
-                  </>
+                    {futureInstallmentsWithoutTipsTotal > 0 ? (
+                      <div>
+                        <h4>Future installments</h4>
+                        <div>{formatPrice(futureInstallmentsWithoutTipsTotal)}</div>
+                      </div>
+                    ) : null}
+                  </div>
                 ) : null}
               </div>
               <TipSelector />
