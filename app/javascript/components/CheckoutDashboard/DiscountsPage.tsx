@@ -1,7 +1,7 @@
 import cx from "classnames";
 import * as React from "react";
 import { GroupBase, SelectInstance } from "react-select";
-import { createCast, is } from "ts-safe-cast";
+import { is } from "ts-safe-cast";
 
 import {
   OfferCodeStatistics,
@@ -14,12 +14,12 @@ import {
 import { CurrencyCode, formatPriceCentsWithCurrencySymbol } from "$app/utils/currency";
 import { asyncVoid } from "$app/utils/promise";
 import { AbortError, assertResponseError } from "$app/utils/request";
-import { register } from "$app/utils/serverComponentUtil";
 import { writeQueryParams } from "$app/utils/url";
 
 import { Button } from "$app/components/Button";
 import { DiscountInput, InputtedDiscount } from "$app/components/CheckoutDashboard/DiscountInput";
 import { Layout, Page } from "$app/components/CheckoutDashboard/Layout";
+import { useClientAlert } from "$app/components/ClientAlertProvider";
 import { CopyToClipboard } from "$app/components/CopyToClipboard";
 import { useCurrentSeller } from "$app/components/CurrentSeller";
 import { DateInput } from "$app/components/DateInput";
@@ -31,7 +31,6 @@ import { Pagination, PaginationProps } from "$app/components/Pagination";
 import { Popover } from "$app/components/Popover";
 import { PriceInput } from "$app/components/PriceInput";
 import { Select, Option } from "$app/components/Select";
-import { showAlert } from "$app/components/server-components/Alert";
 import { TypeSafeOptionSelect } from "$app/components/TypeSafeOptionSelect";
 import { PageHeader } from "$app/components/ui/PageHeader";
 import { useDebouncedCallback } from "$app/components/useDebouncedCallback";
@@ -123,17 +122,15 @@ const extractParams = (rawParams: URLSearchParams): QueryParams => {
 
 const year = new Date().getFullYear();
 
-const DiscountsPage = ({
-  offer_codes,
-  pages,
-  products,
-  pagination: initialPagination,
-}: {
-  pages: Page[];
+export type DiscountsPageProps = {
   offer_codes: OfferCode[];
+  pages: Page[];
   products: Product[];
   pagination: PaginationProps;
-}) => {
+};
+
+const DiscountsPage = ({ offer_codes, pages, products, pagination: initialPagination }: DiscountsPageProps) => {
+  const { showAlert } = useClientAlert();
   const loggedInUser = useLoggedInUser();
   const [{ offerCodes, pagination }, setState] = React.useState<{
     offerCodes: OfferCode[];
@@ -326,7 +323,7 @@ const DiscountsPage = ({
     >
       <section className="p-4 md:p-8">
         {offerCodes.length > 0 ? (
-          <>
+          <section className="paragraphs">
             <table aria-live="polite" aria-busy={isLoading}>
               <thead>
                 <tr>
@@ -378,7 +375,7 @@ const DiscountsPage = ({
                         expiresAt ? formatDate(expiresAt) : "No end date"
                       }`}</td>
                       <td className="whitespace-nowrap">
-                        <div className="grid grid-cols-[min-content_1fr] gap-2">
+                        <div className="override grid grid-cols-[min-content_1fr] gap-2">
                           {validAt && currentDate < validAt ? (
                             <>Scheduled</>
                           ) : expiresAt && currentDate > expiresAt ? (
@@ -427,7 +424,8 @@ const DiscountsPage = ({
                                 role="menuitem"
                                 className="danger"
                                 inert={!offerCode.can_update || isLoading}
-                                onClick={asyncVoid(async () => {
+                                onClick={asyncVoid(async (e) => {
+                                  e.stopPropagation();
                                   try {
                                     setIsLoading(true);
                                     setPopoverOfferCodeId(null);
@@ -457,7 +455,7 @@ const DiscountsPage = ({
                 pagination={pagination}
               />
             ) : null}
-          </>
+          </section>
         ) : (
           <div className="placeholder">
             <figure>
@@ -548,7 +546,7 @@ const DiscountsPage = ({
                       ? (selectedOfferCodeStatistics.uses.products[product.id] ?? 0)
                       : null;
                   return (
-                    <div key={product.id} className="grid grid-cols-[1fr_auto] gap-2">
+                    <div key={product.id} className="override grid grid-cols-[1fr_auto] gap-2">
                       <div>
                         <h5>{product.name}</h5>
                         {uses != null ? `${uses} ${uses === 1 ? "use" : "uses"}` : null}
@@ -698,7 +696,7 @@ const Form = ({
   isLoading: boolean;
 }) => {
   const [name, setName] = React.useState<{ value: string; error?: boolean }>({ value: offerCode?.name ?? "" });
-
+  const { showAlert } = useClientAlert();
   const [code, setCode] = React.useState<{ value: string; error?: boolean }>({
     value: offerCode?.code || generateCode(),
   });
@@ -830,7 +828,7 @@ const Form = ({
         }
       />
       <form>
-        <section className="!p-8">
+        <section className="p-8!">
           <header>
             <div className="paragraphs">
               <div>Create a discount code so your audience can buy your products at a reduced price.</div>
@@ -863,7 +861,7 @@ const Form = ({
             <legend>
               <label htmlFor={`${uid}code`}>Discount code</label>
             </legend>
-            <div className="grid grid-cols-[1fr_auto] gap-2">
+            <div className="override grid grid-cols-[1fr_auto] gap-2">
               <input
                 type="text"
                 id={`${uid}code`}
@@ -1138,4 +1136,4 @@ const Form = ({
   );
 };
 
-export default register({ component: DiscountsPage, propParser: createCast() });
+export default DiscountsPage;
