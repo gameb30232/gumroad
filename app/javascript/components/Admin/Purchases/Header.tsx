@@ -19,7 +19,7 @@ const AdminPurchasesHeader = ({ purchase }: Props) => (
 
     <span className="ml-2">{purchase.variants_list}</span>
 
-    <Link href={purchase.link.long_url} target="_blank" className="ml-2 mr-1 no-underline">
+    <Link href={purchase.link.long_url} target="_blank" className="mr-1 ml-2 no-underline">
       <Icon name="arrow-up-right-square" />
     </Link>
   </>

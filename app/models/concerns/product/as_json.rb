@@ -221,11 +221,10 @@ module Product::AsJson
     end
 
     private
+      def product_type_label
+        return "Product" unless is_recurring_billing?
+        return "Membership" if is_tiered_membership?
 
-    def product_type_label
-      return "Product" unless is_recurring_billing?
-      return "Membership" if is_tiered_membership?
-
-      "Subscription"
-    end
+        "Subscription"
+      end
 end
