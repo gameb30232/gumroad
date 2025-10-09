@@ -53,7 +53,7 @@ export const Covers = ({
       {prevCover ? <PreviewArrow direction="previous" onClick={() => setActiveCoverId(prevCover.id)} /> : null}
       {nextCover ? <PreviewArrow direction="next" onClick={() => setActiveCoverId(nextCover.id)} /> : null}
       <div
-        className="flex overflow-x-scroll overflow-y-hidden snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden items-center h-full [&>*]:snap-start [&>*]:flex-[1_0_100%] [&>*]:min-h-[1px]"
+        className="flex overflow-x-scroll overflow-y-hidden snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden items-center h-full"
         ref={itemsRef}
         style={{
           aspectRatio,
@@ -149,7 +149,7 @@ const CoverItem = ({ cover }: { cover: AssetPreview }) => {
   }
 
   return (
-    <div key={cover.id} ref={containerRef} id={cover.id} className="flex justify-center p-0 mt-0">
+    <div key={cover.id} ref={containerRef} id={cover.id} className="snap-start flex flex-[1_0_100%] min-h-[1px] justify-center p-0 mt-0">
       {coverComponent}
     </div>
   );
