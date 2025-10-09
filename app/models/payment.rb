@@ -65,7 +65,7 @@ class Payment < ApplicationRecord
 
     event :mark_returned do
       transition %i[processing unclaimed] => :returned
-      transition completed: :returned, if: :paypal_processor?
+      transition completed: :returned, unless: :paypal_processor?
     end
 
     event :mark_unclaimed do
