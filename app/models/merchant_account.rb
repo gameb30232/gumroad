@@ -62,7 +62,7 @@ class MerchantAccount < ApplicationRecord
   end
 
   def is_a_gumroad_managed_stripe_account?
-    stripe_charge_processor? && json_data.dig("meta", "stripe_connect") != "true"
+    stripe_charge_processor? && !user_id? && json_data.dig("meta", "stripe_connect") != "true"
   end
 
   # Public: Returns who holds the funds for charges created for this merchant account.
@@ -98,7 +98,7 @@ class MerchantAccount < ApplicationRecord
   end
 
   def charge_processor_alive?
-    charge_processor_alive_at? && !charge_processor_deleted?
+    charge_processor_alive_at.present? && !charge_processor_deleted?
   end
   alias_method :charge_processor_alive, :charge_processor_alive?
 
