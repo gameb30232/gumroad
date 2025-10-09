@@ -1,6 +1,7 @@
 @layer theme, base, components, utilities;
 @import "tailwindcss/theme.css" layer(theme);
-@import "tailwindcss/utilities.css" source(none); /* Should be layer(utilties) but that conflicts with the legacy non-layer CSS */
+@import "tailwindcss/utilities.css" source(none);
+/* Should be layer(utilties) but that conflicts with the legacy non-layer CSS */
 /*
  * By default Tailwind checks all files in the project for classes, but in Gumroad that causes performance issues.
  * Whitelisting source directories solves the issue, but we need to keep the list up to date to cover all frontend code.
@@ -26,6 +27,7 @@
   --color-background: rgb(var(--filled));
   --color-foreground: rgb(var(--color));
   --color-border: rgb(var(--color) / var(--border-alpha));
+  --color-accent: rgb(var(--accent));
 
   --shadow: 0.25rem 0.25rem 0 currentColor;
   --shadow-lg: 0.5rem 0.5rem 0 currentColor;
@@ -61,9 +63,11 @@
   0% {
     transform: translateX(0);
   }
+
   50% {
     transform: translateX(-50%);
   }
+
   100% {
     transform: translateX(0);
   }
