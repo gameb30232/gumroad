@@ -43,7 +43,7 @@ describe Products::ArchivedController do
       expect(page_data_match).to be_present, "Expected Inertia.js data-page attribute"
 
       page_data = JSON.parse(CGI.unescapeHTML(page_data_match[1]))
-        expect(page_data["component"]).to eq("Products/Archived/Index")
+      expect(page_data["component"]).to eq("Products/Archived/Index")
 
       props = page_data["props"]
       expect(props).to be_present

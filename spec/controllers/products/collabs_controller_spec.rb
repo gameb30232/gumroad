@@ -161,7 +161,7 @@ describe Products::CollabsController, :vcr, :sidekiq_inline, :elasticsearch_wait
       expect(page_data_match).to be_present, "Expected Inertia.js data-page attribute"
 
       page_data = JSON.parse(CGI.unescapeHTML(page_data_match[1]))
-        expect(page_data["component"]).to eq("Products/Collabs/Index")
+      expect(page_data["component"]).to eq("Products/Collabs/Index")
 
       props = page_data["props"]
       expect(props).to be_present
@@ -200,7 +200,7 @@ describe Products::CollabsController, :vcr, :sidekiq_inline, :elasticsearch_wait
       expect(page_data_match).to be_present
 
       page_data = JSON.parse(CGI.unescapeHTML(page_data_match[1]))
-        expect(page_data["component"]).to eq("Products/Collabs/Index")
+      expect(page_data["component"]).to eq("Products/Collabs/Index")
 
       props = page_data["props"]
       memberships = props["memberships"]
