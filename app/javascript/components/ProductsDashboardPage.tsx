@@ -1,3 +1,4 @@
+import { Link } from "@inertiajs/react";
 import React from "react";
 
 import { Membership, Product } from "$app/data/products";
@@ -72,8 +73,10 @@ export const ProductsDashboardPage = ({
             </Popover>
           ) : null}
 
-          <NavigationButton href={Routes.new_product_path()} disabled={!canCreateProduct} color="accent">
-            New product
+          <NavigationButton disabled={!canCreateProduct} color="accent">
+            <Link href={Routes.new_product_path()} className="no-underline">
+              New product
+            </Link>
           </NavigationButton>
         </>
       }
@@ -87,8 +90,10 @@ export const ProductsDashboardPage = ({
             <h2>We’ve never met an idea we didn’t like.</h2>
             <p>Your first product doesn’t need to be perfect. Just put it out there, and see if it sticks.</p>
             <div>
-              <NavigationButton href={Routes.new_product_path()} disabled={!canCreateProduct} color="accent">
-                New product
+              <NavigationButton disabled={!canCreateProduct} color="accent">
+                <Link href={Routes.new_product_path()} className="no-underline">
+                  New product
+                </Link>
               </NavigationButton>
             </div>
             <span>

@@ -52,20 +52,29 @@ describe Products::AffiliatedController do
       get :index
 
       expect(response).to have_http_status(:ok)
-      expect(response).to render_template(:index)
+      expect(assigns[:title]).to eq("Products")
+
+      expect(response.body).to include("data-page=")
+
+      page_data_match = response.body.match(/data-page="([^"]*)"/)
+      expect(page_data_match).to be_present, "Expected Inertia.js data-page attribute"
+
+      page_data = JSON.parse(CGI.unescapeHTML(page_data_match[1]))
+        expect(page_data["component"]).to eq("Products/Affiliated/Index")
+
+      props = page_data["props"]
+      expect(props).to be_present
 
       # stats
-      ["Revenue", "Sales", "Affiliated creators", "Products"].each do |title|
-        expect(response.body).to include title
-      end
-      expect(response.body).to include formatted_dollar_amount(affiliate_sales.sum(&:affiliate_credit_cents))
-      expect(response.body).to include affiliate_sales.size.to_s
-      expect(response.body).to include affiliated_products.size.to_s
-      expect(response.body).to include affiliated_creators.size.to_s
+      stats = props["stats"]
+      expect(stats["total_revenue"]).to eq(affiliate_sales.sum(&:affiliate_credit_cents))
+      expect(stats["total_sales"]).to eq(affiliate_user.affiliate_credits.count)
+      expect(stats["total_products"]).to eq(affiliated_products.size)
+      expect(stats["total_affiliated_creators"]).to eq(affiliated_creators.size)
 
       # products
       affiliated_products.each do |product|
-        expect(response.body).to include product.name
+        expect(props["affiliated_products"].any? { |p| p["product_name"] == product.name }).to be(true)
       end
     end
 

@@ -97,8 +97,10 @@ class LinksController < ApplicationController
   def new
     authorize Link
 
-    @react_new_product_page_props = ProductPresenter.new_page_props(current_seller:)
+    props = ProductPresenter.new_page_props(current_seller:)
     @title = "What are you creating?"
+
+    render inertia: "Products/New", props:
   end
 
   def create

@@ -153,20 +153,41 @@ describe Products::CollabsController, :vcr, :sidekiq_inline, :elasticsearch_wait
       get :index
 
       expect(response).to have_http_status(:ok)
-      expect(response).to render_template(:index)
+      expect(assigns[:title]).to eq("Products")
+
+      expect(response.body).to include("data-page=")
+
+      page_data_match = response.body.match(/data-page="([^"]*)"/)
+      expect(page_data_match).to be_present, "Expected Inertia.js data-page attribute"
+
+      page_data = JSON.parse(CGI.unescapeHTML(page_data_match[1]))
+        expect(page_data["component"]).to eq("Products/Collabs/Index")
+
+      props = page_data["props"]
+      expect(props).to be_present
 
       # stats
-      ["Total revenue", "$28", "Customers", "4", "Active members", "3", "Collaborations", "5"].each do |stat|
-        expect(response.body).to include stat
-      end
+      stats = props["stats"]
+      expect(stats["total_revenue"]).to eq(2800)
+      expect(stats["total_customers"]).to eq(4)
+      expect(stats["total_members"]).to eq(3)
+      expect(stats["total_collaborations"]).to eq(5)
 
       # products
-      [collab_1, collab_2, collab_3, membership_collab_1, membership_collab_2].each do |product|
-        expect(response.body).to include product.name
+      memberships = props["memberships"]
+      products = props["products"]
+
+      [membership_collab_1, membership_collab_2].each do |product|
+        expect(memberships.any? { |m| m["id"] == product.id }).to be(true)
+      end
+
+      [collab_1, collab_2, collab_3].each do |product|
+        expect(products.any? { |p| p["id"] == product.id }).to be(true)
       end
 
       [non_collab_product, pending_collab_1, pending_collab_2].each do |product|
-        expect(response.body).not_to include product.name
+        expect(memberships.any? { |m| m["id"] == product.id }).to be(false)
+        expect(products.any? { |p| p["id"] == product.id }).to be(false)
       end
     end
 
@@ -174,14 +195,23 @@ describe Products::CollabsController, :vcr, :sidekiq_inline, :elasticsearch_wait
       get :index, params: { query: "2" }
 
       expect(response).to have_http_status(:ok)
-      expect(response).to render_template(:index)
 
-      [collab_2, membership_collab_2].each do |product|
-        expect(response.body).to include product.name
-      end
+      page_data_match = response.body.match(/data-page="([^"]*)"/)
+      expect(page_data_match).to be_present
+
+      page_data = JSON.parse(CGI.unescapeHTML(page_data_match[1]))
+        expect(page_data["component"]).to eq("Products/Collabs/Index")
+
+      props = page_data["props"]
+      memberships = props["memberships"]
+      products = props["products"]
+
+      expect(memberships.any? { |m| m["id"] == membership_collab_2.id }).to be(true)
+      expect(products.any? { |p| p["id"] == collab_2.id }).to be(true)
 
       [collab_1, collab_3, membership_collab_1].each do |product|
-        expect(response.body).not_to include product.name
+        expect(memberships.any? { |m| m["id"] == product.id }).to be(false)
+        expect(products.any? { |p| p["id"] == product.id }).to be(false)
       end
     end
   end

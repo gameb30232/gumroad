@@ -3007,10 +3007,25 @@ describe LinksController, :vcr do
         get :new
 
         expect(response).to be_successful
-        expect(response.body).to have_text("Publish your first product")
-        expect(assigns[:react_new_product_page_props]).to eq(
-          ProductPresenter.new_page_props(current_seller: seller)
-        )
+        expect(assigns[:title]).to eq("What are you creating?")
+
+        expect(response.body).to include("data-page=")
+
+        page_data_match = response.body.match(/data-page="([^"]*)"/)
+        expect(page_data_match).to be_present, "Expected Inertia.js data-page attribute"
+
+        page_data = JSON.parse(CGI.unescapeHTML(page_data_match[1]))
+        expect(page_data["component"]).to eq("Products/New")
+
+        props = page_data["props"]
+        expect(props).to be_present
+
+        expected_props = ProductPresenter.new_page_props(current_seller: seller)
+        expected_props.each do |key, value|
+          expect(props[key.to_s]).to eq(JSON.parse(value.to_json))
+        end
+
+        expect(props["show_orientation_text"]).to eq(true)
       end
 
       it "does not show the introduction text if the user has memberships" do
@@ -3018,10 +3033,25 @@ describe LinksController, :vcr do
         get :new
 
         expect(response).to be_successful
-        expect(response.body).to have_text("What are you creating?")
-        expect(assigns[:react_new_product_page_props]).to eq(
-          ProductPresenter.new_page_props(current_seller: seller)
-        )
+        expect(assigns[:title]).to eq("What are you creating?")
+
+        expect(response.body).to include("data-page=")
+
+        page_data_match = response.body.match(/data-page="([^"]*)"/)
+        expect(page_data_match).to be_present, "Expected Inertia.js data-page attribute"
+
+        page_data = JSON.parse(CGI.unescapeHTML(page_data_match[1]))
+        expect(page_data["component"]).to eq("Products/New")
+
+        props = page_data["props"]
+        expect(props).to be_present
+
+        expected_props = ProductPresenter.new_page_props(current_seller: seller)
+        expected_props.each do |key, value|
+          expect(props[key.to_s]).to eq(JSON.parse(value.to_json))
+        end
+
+        expect(props["show_orientation_text"]).to eq(false)
       end
 
       it "does not show the introduction text if the user has products" do
@@ -3029,10 +3059,25 @@ describe LinksController, :vcr do
         get :new
 
         expect(response).to be_successful
-        expect(response.body).to have_text("What are you creating?")
-        expect(assigns[:react_new_product_page_props]).to eq(
-          ProductPresenter.new_page_props(current_seller: seller)
-        )
+        expect(assigns[:title]).to eq("What are you creating?")
+
+        expect(response.body).to include("data-page=")
+
+        page_data_match = response.body.match(/data-page="([^"]*)"/)
+        expect(page_data_match).to be_present, "Expected Inertia.js data-page attribute"
+
+        page_data = JSON.parse(CGI.unescapeHTML(page_data_match[1]))
+        expect(page_data["component"]).to eq("Products/New")
+
+        props = page_data["props"]
+        expect(props).to be_present
+
+        expected_props = ProductPresenter.new_page_props(current_seller: seller)
+        expected_props.each do |key, value|
+          expect(props[key.to_s]).to eq(JSON.parse(value.to_json))
+        end
+
+        expect(props["show_orientation_text"]).to eq(false)
       end
     end
 

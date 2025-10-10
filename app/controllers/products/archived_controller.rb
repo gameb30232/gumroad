@@ -13,9 +13,9 @@ class Products::ArchivedController < Sellers::BaseController
     memberships_pagination, memberships = paginated_memberships(page: 1)
     products_pagination, products = paginated_products(page: 1)
 
-    redirect_to products_url if memberships.none? && products.none?
+    return redirect_to products_url if memberships.none? && products.none?
 
-    @react_products_page_props = DashboardProductsPagePresenter.new(
+    props = DashboardProductsPagePresenter.new(
       pundit_user:,
       memberships:,
       memberships_pagination:,
@@ -24,6 +24,8 @@ class Products::ArchivedController < Sellers::BaseController
     ).page_props
 
     @title = "Archived products"
+
+    render inertia: "Products/Archived/Index", props:
   end
 
   def products_paged

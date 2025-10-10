@@ -35,15 +35,31 @@ describe Products::ArchivedController do
       get :index
 
       expect(response).to have_http_status(:ok)
-      expect(response.body).not_to include(membership.name)
-      expect(response.body).to include(archived_membership.name)
-      expect(response.body).not_to include(deleted_membership.name)
-      expect(response.body).not_to include(other_membership.name)
+      expect(assigns[:title]).to eq("Archived products")
 
-      expect(response.body).not_to include(product.name)
-      expect(response.body).to include(archived_product.name)
-      expect(response.body).not_to include(deleted_product.name)
-      expect(response.body).not_to include(other_product.name)
+      expect(response.body).to include("data-page=")
+
+      page_data_match = response.body.match(/data-page="([^"]*)"/)
+      expect(page_data_match).to be_present, "Expected Inertia.js data-page attribute"
+
+      page_data = JSON.parse(CGI.unescapeHTML(page_data_match[1]))
+        expect(page_data["component"]).to eq("Products/Archived/Index")
+
+      props = page_data["props"]
+      expect(props).to be_present
+
+      memberships = props["memberships"]
+      products = props["products"]
+
+      expect(memberships.any? { |m| m["name"] == membership.name }).to be(false)
+      expect(memberships.any? { |m| m["name"] == archived_membership.name }).to be(true)
+      expect(memberships.any? { |m| m["name"] == deleted_membership.name }).to be(false)
+      expect(memberships.any? { |m| m["name"] == other_membership.name }).to be(false)
+
+      expect(products.any? { |p| p["name"] == product.name }).to be(false)
+      expect(products.any? { |p| p["name"] == archived_product.name }).to be(true)
+      expect(products.any? { |p| p["name"] == deleted_product.name }).to be(false)
+      expect(products.any? { |p| p["name"] == other_product.name }).to be(false)
     end
 
     context "when there are no archived products" do
