@@ -165,7 +165,7 @@ export const Layout = (
   );
 
   const mainSection = (
-    <section className={classNames("border-b border-border lg:px-[max((100%-71.25rem)/2,2rem)] lg:py-16", props.sections.length > 0 ? "px-4 py-8" : "p-4")}>
+    <section className={classNames("border-b border-border lg:px-[var(--spacing-discover-product-page)] lg:py-16", props.sections.length > 0 ? "px-4 py-8" : "p-4")}>
       {productView}
     </section>
   );

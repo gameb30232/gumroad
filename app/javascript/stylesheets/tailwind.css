@@ -31,6 +31,9 @@
   --shadow-lg: 0.5rem 0.5rem 0 currentColor;
 
   --spacing-product-page: 75.25rem;
+  --spacing-product-page-max-width: 71.25rem;
+  --spacing-product-page-padding: 4rem;
+  --spacing-discover-product-page: max((100% - var(--spacing-product-page-max-width)) / 2, var(--spacing-product-page-padding));
 }
 
 @layer base {
