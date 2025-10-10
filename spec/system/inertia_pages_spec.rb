@@ -75,7 +75,7 @@ RSpec.describe "Inertia Pages", type: :system, js: true do
       # Verify Inertia component
       expect(page).to have_css("[data-page]")
       page_data = JSON.parse(page.find("[data-page]")["data-page"])
-      expect(page_data["component"]).to eq("Products/index")
+      expect(page_data["component"]).to eq("Products/Index")
     end
 
     it "displays both products and memberships" do

@@ -54,7 +54,7 @@ class LinksController < ApplicationController
       products_pagination: @products_pagination
     ).page_props
 
-    render inertia: "Products/index",
+    render inertia: "Products/Index",
            props: { react_products_page_props: @react_products_page_props }
   end
 
