@@ -1,10 +1,9 @@
-import { Link } from "@inertiajs/react";
 import React from "react";
 
 import { Membership, Product } from "$app/data/products";
 
-import { NavigationButton } from "$app/components/Button";
 import { Icon } from "$app/components/Icons";
+import { NavigationButtonInertia } from "$app/components/NavigationButton";
 import { PaginationProps } from "$app/components/Pagination";
 import { Popover } from "$app/components/Popover";
 import { ProductsLayout } from "$app/components/ProductsLayout";
@@ -73,11 +72,9 @@ export const ProductsDashboardPage = ({
             </Popover>
           ) : null}
 
-          <NavigationButton disabled={!canCreateProduct} color="accent">
-            <Link href={Routes.new_product_path()} className="no-underline">
-              New product
-            </Link>
-          </NavigationButton>
+          <NavigationButtonInertia href={Routes.new_product_path()} disabled={!canCreateProduct} color="accent">
+            New product
+          </NavigationButtonInertia>
         </>
       }
     >
@@ -90,11 +87,9 @@ export const ProductsDashboardPage = ({
             <h2>We’ve never met an idea we didn’t like.</h2>
             <p>Your first product doesn’t need to be perfect. Just put it out there, and see if it sticks.</p>
             <div>
-              <NavigationButton disabled={!canCreateProduct} color="accent">
-                <Link href={Routes.new_product_path()} className="no-underline">
-                  New product
-                </Link>
-              </NavigationButton>
+              <NavigationButtonInertia href={Routes.new_product_path()} disabled={!canCreateProduct} color="accent">
+                New product
+              </NavigationButtonInertia>
             </div>
             <span>
               or{" "}
