@@ -7,6 +7,8 @@ class Products::ArchivedController < Sellers::BaseController
 
   before_action :fetch_product_and_enforce_ownership, only: %i[create destroy]
 
+  layout "inertia", only: [:index]
+
   def index
     authorize [:products, :archived, Link]
 

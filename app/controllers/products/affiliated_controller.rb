@@ -3,6 +3,8 @@
 class Products::AffiliatedController < Sellers::BaseController
   before_action :authorize
 
+  layout "inertia", only: [:index]
+
   def index
     @title = "Products"
     props = AffiliatedProductsPresenter.new(current_seller,

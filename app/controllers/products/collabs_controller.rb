@@ -3,6 +3,8 @@
 class Products::CollabsController < Sellers::BaseController
   before_action :authorize
 
+  layout "inertia", only: [:index]
+
   def index
     @title = "Products"
     props = CollabProductsPagePresenter.new(**presenter_params).initial_page_props
