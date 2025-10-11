@@ -31,7 +31,7 @@ class LinksController < ApplicationController
   before_action :fetch_product_and_enforce_ownership, only: %i[destroy]
   before_action :fetch_product_and_enforce_access, only: %i[update publish unpublish release_preorder update_sections]
 
-  layout "inertia", only: [:index]
+  layout "inertia", only: [:index, :new]
 
   def index
     authorize Link
