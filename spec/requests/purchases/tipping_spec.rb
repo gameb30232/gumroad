@@ -176,10 +176,11 @@ describe("Product checkout with tipping", type: :system, js: true) do
         add_to_cart(free_product2, pwyw_price: 0)
         visit free_product1.long_url
         add_to_cart(free_product1, pwyw_price: 0)
+        expect(page).not_to have_text("Pay with")
 
         fill_in "Tip", with: 0.99
-        fill_checkout_form(free_product1)
         expect(page).to have_text("Total US$0.99", normalize_ws: true)
+        fill_checkout_form(free_product1)
         click_on "Pay"
 
         expect(page).to have_alert(text: "Your purchase was successful!")
@@ -197,10 +198,11 @@ describe("Product checkout with tipping", type: :system, js: true) do
       it "shows backend validation error when tip below minimum" do
         visit free_product1.long_url
         add_to_cart(free_product1, pwyw_price: 0)
+        expect(page).not_to have_text("Pay with")
 
         fill_in "Tip", with: 0.5
-        fill_checkout_form(free_product1)
         expect(page).to have_text("Total US$0.5", normalize_ws: true)
+        fill_checkout_form(free_product1)
         click_on "Pay"
 
         expect(page).to have_text("The amount must be at least $0.99.")
@@ -213,6 +215,7 @@ describe("Product checkout with tipping", type: :system, js: true) do
         add_to_cart(free_product3, pwyw_price: 0)
         visit free_product1.long_url
         add_to_cart(free_product1, pwyw_price: 0)
+        expect(page).not_to have_text("Pay with")
 
         fill_in "Tip", with: 1.98
         fill_checkout_form(free_product1)
@@ -235,10 +238,11 @@ describe("Product checkout with tipping", type: :system, js: true) do
         add_to_cart(free_product3, pwyw_price: 0)
         visit free_product1.long_url
         add_to_cart(free_product1, pwyw_price: 0)
+        expect(page).not_to have_text("Pay with")
 
         fill_in "Tip", with: 1.5
-        fill_checkout_form(free_product1)
         expect(page).to have_text("Total US$1.5", normalize_ws: true)
+        fill_checkout_form(free_product1)
         click_on "Pay"
 
         expect(page).to have_text("The amount must be at least $0.99.", count: 2)
