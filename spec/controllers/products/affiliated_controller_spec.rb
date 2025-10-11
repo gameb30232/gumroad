@@ -3,8 +3,9 @@
 require "spec_helper"
 require "shared_examples/sellers_base_controller_concern"
 require "shared_examples/authorize_called"
+require "inertia_rails/rspec"
 
-describe Products::AffiliatedController do
+describe Products::AffiliatedController, inertia: true do
   include CurrencyHelper
   render_views
 
@@ -54,27 +55,18 @@ describe Products::AffiliatedController do
       expect(response).to have_http_status(:ok)
       expect(assigns[:title]).to eq("Products")
 
-      expect(response.body).to include("data-page=")
-
-      page_data_match = response.body.match(/data-page="([^"]*)"/)
-      expect(page_data_match).to be_present, "Expected Inertia.js data-page attribute"
-
-      page_data = JSON.parse(CGI.unescapeHTML(page_data_match[1]))
-      expect(page_data["component"]).to eq("Products/Affiliated/Index")
-
-      props = page_data["props"]
-      expect(props).to be_present
+      expect(inertia).to render_component("Products/Affiliated/Index")
 
       # stats
-      stats = props["stats"]
-      expect(stats["total_revenue"]).to eq(affiliate_sales.sum(&:affiliate_credit_cents))
-      expect(stats["total_sales"]).to eq(affiliate_user.affiliate_credits.count)
-      expect(stats["total_products"]).to eq(affiliated_products.size)
-      expect(stats["total_affiliated_creators"]).to eq(affiliated_creators.size)
+      stats = inertia.props[:stats]
+      expect(stats[:total_revenue]).to eq(affiliate_sales.sum(&:affiliate_credit_cents))
+      expect(stats[:total_sales]).to eq(affiliate_user.affiliate_credits.count)
+      expect(stats[:total_products]).to eq(affiliated_products.size)
+      expect(stats[:total_affiliated_creators]).to eq(affiliated_creators.size)
 
       # products
       affiliated_products.each do |product|
-        expect(props["affiliated_products"].any? { |p| p["product_name"] == product.name }).to be(true)
+        expect(inertia.props[:affiliated_products].any? { |p| p[:product_name] == product.name }).to be(true)
       end
     end
 

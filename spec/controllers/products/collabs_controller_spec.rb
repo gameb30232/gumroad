@@ -3,8 +3,9 @@
 require "spec_helper"
 require "shared_examples/sellers_base_controller_concern"
 require "shared_examples/authorize_called"
+require "inertia_rails/rspec"
 
-describe Products::CollabsController, :vcr, :sidekiq_inline, :elasticsearch_wait_for_refresh do
+describe Products::CollabsController, :vcr, :sidekiq_inline, :elasticsearch_wait_for_refresh, inertia: true do
   include CurrencyHelper
   render_views
 
@@ -155,39 +156,30 @@ describe Products::CollabsController, :vcr, :sidekiq_inline, :elasticsearch_wait
       expect(response).to have_http_status(:ok)
       expect(assigns[:title]).to eq("Products")
 
-      expect(response.body).to include("data-page=")
-
-      page_data_match = response.body.match(/data-page="([^"]*)"/)
-      expect(page_data_match).to be_present, "Expected Inertia.js data-page attribute"
-
-      page_data = JSON.parse(CGI.unescapeHTML(page_data_match[1]))
-      expect(page_data["component"]).to eq("Products/Collabs/Index")
-
-      props = page_data["props"]
-      expect(props).to be_present
+      expect(inertia).to render_component("Products/Collabs/Index")
 
       # stats
-      stats = props["stats"]
-      expect(stats["total_revenue"]).to eq(2800)
-      expect(stats["total_customers"]).to eq(4)
-      expect(stats["total_members"]).to eq(3)
-      expect(stats["total_collaborations"]).to eq(5)
+      stats = inertia.props[:stats]
+      expect(stats[:total_revenue]).to eq(2800)
+      expect(stats[:total_customers]).to eq(4)
+      expect(stats[:total_members]).to eq(3)
+      expect(stats[:total_collaborations]).to eq(5)
 
       # products
-      memberships = props["memberships"]
-      products = props["products"]
+      memberships = inertia.props[:memberships]
+      products = inertia.props[:products]
 
       [membership_collab_1, membership_collab_2].each do |product|
-        expect(memberships.any? { |m| m["id"] == product.id }).to be(true)
+        expect(memberships.any? { |m| m[:id] == product.id }).to be(true)
       end
 
       [collab_1, collab_2, collab_3].each do |product|
-        expect(products.any? { |p| p["id"] == product.id }).to be(true)
+        expect(products.any? { |p| p[:id] == product.id }).to be(true)
       end
 
       [non_collab_product, pending_collab_1, pending_collab_2].each do |product|
-        expect(memberships.any? { |m| m["id"] == product.id }).to be(false)
-        expect(products.any? { |p| p["id"] == product.id }).to be(false)
+        expect(memberships.any? { |m| m[:id] == product.id }).to be(false)
+        expect(products.any? { |p| p[:id] == product.id }).to be(false)
       end
     end
 
@@ -196,22 +188,17 @@ describe Products::CollabsController, :vcr, :sidekiq_inline, :elasticsearch_wait
 
       expect(response).to have_http_status(:ok)
 
-      page_data_match = response.body.match(/data-page="([^"]*)"/)
-      expect(page_data_match).to be_present
+      expect(inertia).to render_component("Products/Collabs/Index")
 
-      page_data = JSON.parse(CGI.unescapeHTML(page_data_match[1]))
-      expect(page_data["component"]).to eq("Products/Collabs/Index")
+      memberships = inertia.props[:memberships]
+      products = inertia.props[:products]
 
-      props = page_data["props"]
-      memberships = props["memberships"]
-      products = props["products"]
-
-      expect(memberships.any? { |m| m["id"] == membership_collab_2.id }).to be(true)
-      expect(products.any? { |p| p["id"] == collab_2.id }).to be(true)
+      expect(memberships.any? { |m| m[:id] == membership_collab_2.id }).to be(true)
+      expect(products.any? { |p| p[:id] == collab_2.id }).to be(true)
 
       [collab_1, collab_3, membership_collab_1].each do |product|
-        expect(memberships.any? { |m| m["id"] == product.id }).to be(false)
-        expect(products.any? { |p| p["id"] == product.id }).to be(false)
+        expect(memberships.any? { |m| m[:id] == product.id }).to be(false)
+        expect(products.any? { |p| p[:id] == product.id }).to be(false)
       end
     end
   end

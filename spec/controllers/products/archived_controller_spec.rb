@@ -4,8 +4,9 @@ require "spec_helper"
 require "shared_examples/sellers_base_controller_concern"
 require "shared_examples/authorize_called"
 require "shared_examples/with_sorting_and_pagination"
+require "inertia_rails/rspec"
 
-describe Products::ArchivedController do
+describe Products::ArchivedController, inertia: true do
   render_views
 
   it_behaves_like "inherits from Sellers::BaseController"
@@ -37,29 +38,20 @@ describe Products::ArchivedController do
       expect(response).to have_http_status(:ok)
       expect(assigns[:title]).to eq("Archived products")
 
-      expect(response.body).to include("data-page=")
+      expect(inertia).to render_component("Products/Archived/Index")
 
-      page_data_match = response.body.match(/data-page="([^"]*)"/)
-      expect(page_data_match).to be_present, "Expected Inertia.js data-page attribute"
+      memberships = inertia.props[:memberships]
+      products = inertia.props[:products]
 
-      page_data = JSON.parse(CGI.unescapeHTML(page_data_match[1]))
-      expect(page_data["component"]).to eq("Products/Archived/Index")
+      expect(memberships.any? { |m| m[:name] == membership.name }).to be(false)
+      expect(memberships.any? { |m| m[:name] == archived_membership.name }).to be(true)
+      expect(memberships.any? { |m| m[:name] == deleted_membership.name }).to be(false)
+      expect(memberships.any? { |m| m[:name] == other_membership.name }).to be(false)
 
-      props = page_data["props"]
-      expect(props).to be_present
-
-      memberships = props["memberships"]
-      products = props["products"]
-
-      expect(memberships.any? { |m| m["name"] == membership.name }).to be(false)
-      expect(memberships.any? { |m| m["name"] == archived_membership.name }).to be(true)
-      expect(memberships.any? { |m| m["name"] == deleted_membership.name }).to be(false)
-      expect(memberships.any? { |m| m["name"] == other_membership.name }).to be(false)
-
-      expect(products.any? { |p| p["name"] == product.name }).to be(false)
-      expect(products.any? { |p| p["name"] == archived_product.name }).to be(true)
-      expect(products.any? { |p| p["name"] == deleted_product.name }).to be(false)
-      expect(products.any? { |p| p["name"] == other_product.name }).to be(false)
+      expect(products.any? { |p| p[:name] == product.name }).to be(false)
+      expect(products.any? { |p| p[:name] == archived_product.name }).to be(true)
+      expect(products.any? { |p| p[:name] == deleted_product.name }).to be(false)
+      expect(products.any? { |p| p[:name] == other_product.name }).to be(false)
     end
 
     context "when there are no archived products" do
