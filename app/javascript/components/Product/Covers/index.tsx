@@ -149,7 +149,7 @@ const CoverItem = ({ cover }: { cover: AssetPreview }) => {
   }
 
   return (
-    <div key={cover.id} ref={containerRef} role="tabpanel"  id={cover.id} className="snap-start flex flex-[1_0_100%] min-h-[1px] justify-center !p-0 !mt-0 !border-0">
+    <div key={cover.id} ref={containerRef} role="tabpanel" id={cover.id} className="snap-start flex flex-[1_0_100%] min-h-[1px] justify-center !p-0 !mt-0 !border-0">
       {coverComponent}
     </div>
   );
