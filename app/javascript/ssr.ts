@@ -53,9 +53,9 @@ import GumroadBlogPostPage from "$app/components/server-components/GumroadBlog/P
 import HelpCenterArticlesIndexPage from "$app/components/server-components/HelpCenter/ArticlesIndexPage";
 import LibraryPage from "$app/components/server-components/LibraryPage";
 import LoginPage from "$app/components/server-components/LoginPage";
-import PasswordResetPage from "$app/components/server-components/PasswordResetPage";
 import Nav from "$app/components/server-components/Nav";
 import NewProductPage from "$app/components/server-components/NewProductPage";
+import PasswordResetPage from "$app/components/server-components/PasswordResetPage";
 import PayoutCreditCard from "$app/components/server-components/PayoutPage/CreditCard";
 import PdfReaderPage from "$app/components/server-components/PdfReaderPage";
 import ProductPage from "$app/components/server-components/Product";
