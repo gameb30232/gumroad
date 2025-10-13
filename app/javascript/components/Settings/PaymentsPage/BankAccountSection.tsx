@@ -922,6 +922,10 @@ const BankAccountSection = ({
   return (
     <>
       <div className="whitespace-pre-line">{feeInfoText}</div>
+      <div role="alert" className="warning">
+        <strong>Important:</strong> Add a bank account in your local currency. Using a USD account based in another country will result in lost payouts and payment issues.
+      </div>
+
       <section className="override grid gap-8">
         <fieldset className={cx({ danger: errorFieldNames.has("account_holder_full_name") })}>
           <legend>
