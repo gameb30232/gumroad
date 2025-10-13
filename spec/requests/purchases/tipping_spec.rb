@@ -221,8 +221,8 @@ describe("Product checkout with tipping", type: :system, js: true) do
 
         fill_in "Tip", with: 1.98
         fill_in "Tip", with: 1.98
-        fill_checkout_form(free_product1)
         expect(page).to have_text("Total US$1.98", normalize_ws: true)
+        fill_checkout_form(free_product1)
         click_on "Pay"
 
         expect(page).to have_alert(text: "Your purchase was successful!")
