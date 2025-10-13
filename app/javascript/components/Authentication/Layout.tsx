@@ -28,9 +28,9 @@ export const Layout = ({
         </PageHeader>
         <div className="p-8 sm:p-16">{children}</div>
       </div>
-      <aside>
-        <img src={background} />
-      </aside>
+      <div className="w-[40vw] hidden lg:block border-l relative">
+        <img src={background} className="size-full max-h-full object-cover absolute inset-0" />
+      </div>
     </div>
   );
 };
