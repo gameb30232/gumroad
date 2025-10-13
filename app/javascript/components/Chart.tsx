@@ -30,6 +30,7 @@ export const Chart = ({
   return (
     <section
       className="rounded border border-border bg-background p-6 text-foreground"
+      data-testid="chart"
       aria-describedby={tooltip ? uid : undefined}
     >
       <div className="relative">
@@ -90,6 +91,7 @@ export const lineProps = (
       r={Math.min(width / dotCount / 7, 8)}
       fill="rgb(var(--accent))"
       stroke="none"
+      data-testid="chart-dot"
     />
   ),
 });
