@@ -58,14 +58,25 @@ export const PriceTag = ({
 
   return (
     <div itemScope itemProp="offers" itemType="https://schema.org/Offer" className="flex items-center">
-      <div className={`has-tooltip ${tooltipPosition}`} aria-describedby={tooltipUid}>
+      <div
+        className={`has-tooltip ${tooltipPosition} !flex border border-r-0 border-border`}
+        aria-describedby={tooltipUid}
+      >
         <div
-          className="price"
+          className="bg-accent px-2 py-1 pr-2"
           itemProp="price"
           content={formatPriceCentsWithoutCurrencySymbolAndComma(currencyCode, price)}
         >
           {priceTag}
         </div>
+        <svg viewBox="0 0 1 2" className="h-[round(up,1lh+--spacing(2),1px)]">
+          <path
+            className="fill-accent stroke-black stroke-1"
+            vectorEffect="non-scaling-stroke"
+            d="M0 1v-1h1Zv1h1Z"
+            style={{ strokeDasharray: "0 2em 1em" }}
+          />
+        </svg>
         <div role="tooltip" id={tooltipUid}>
           {priceTag}
         </div>
