@@ -386,40 +386,20 @@ export const DashboardPage = ({
         <h2>Activity</h2>
 
         <Stats>
+          <StatsItem title="Balance" description="Your current balance available for payout" value={balances.balance} />
           <StatsItem
-            title={
-              <>
-                <Icon name="circle-fill" className="text-foreground" />
-                Balance
-              </>
-            }
-            value={balances.balance}
-          />
-          <StatsItem
-            title={
-              <>
-                <Icon name="circle-fill" className="text-muted-foreground" />
-                Last 7 days
-              </>
-            }
+            title="Last 7 days"
+            description="Your total sales in the last 7 days"
             value={balances.last_seven_days_sales_total}
           />
           <StatsItem
-            title={
-              <>
-                <Icon name="circle-fill" className="text-accent" />
-                Last 28 days
-              </>
-            }
+            title="Last 28 days"
+            description="Your total sales in the last 28 days"
             value={balances.last_28_days_sales_total}
           />
           <StatsItem
-            title={
-              <>
-                <Icon name="circle-fill" className="text-accent" />
-                Total earnings
-              </>
-            }
+            title="Total earnings"
+            description="Your all-time net earnings from all products, excluding refunds and chargebacks"
             value={balances.total}
           />
         </Stats>
