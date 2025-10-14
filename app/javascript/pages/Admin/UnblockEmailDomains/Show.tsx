@@ -1,24 +1,14 @@
-import { usePage } from "@inertiajs/react";
 import React from "react";
 
-import Form from "./Form";
+import Form from "$app/components/Admin/BlockEmailDomainsForm";
 
-type Props = {
-  authenticity_token: string;
-};
+const AdminUnblockEmailDomains = () => (
+  <Form
+    action={Routes.admin_unblock_email_domains_path()}
+    header="To suspend email domains, please enter them separated by comma or newline."
+    buttonLabel="Unblock email domains"
+    noticeMessage="Unblocking email domains in progress!"
+  />
+);
 
-const AdminBlockEmailDomains = () => {
-  const { authenticity_token } = usePage<Props>().props;
-
-  return (
-    <Form
-      action={Routes.admin_unblock_email_domains_path()}
-      authenticity_token={authenticity_token}
-      header="To suspend email domains, please enter them separated by comma or newline."
-      button_label="Unblock email domains"
-      notice_message="Unblocking email domains in progress!"
-    />
-  );
-};
-
-export default AdminBlockEmailDomains;
+export default AdminUnblockEmailDomains;

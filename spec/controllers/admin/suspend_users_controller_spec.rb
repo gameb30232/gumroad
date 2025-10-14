@@ -2,8 +2,9 @@
 
 require "spec_helper"
 require "shared_examples/admin_base_controller_concern"
+require "inertia_rails/rspec"
 
-describe Admin::SuspendUsersController do
+describe Admin::SuspendUsersController, type: :controller, inertia: true do
   render_views
 
   it_behaves_like "inherits from Admin::BaseController"
@@ -18,21 +19,16 @@ describe Admin::SuspendUsersController do
       get :show
 
       expect(response).to be_successful
-      expect(response.body).to include("data-page")
-      expect(response.body).to include("Admin/SuspendUsers/Show")
+      expect(inertia.component).to eq "Admin/SuspendUsers/Show"
 
-      data_page = response.body.match(/data-page="([^"]+)"/)[1]
-      json_object = JSON.parse(CGI.unescapeHTML(data_page))
-      props = json_object["props"]
-
-      expect(props["title"]).to eq("Mass-suspend users")
-      expect(props["suspend_reasons"]).to eq([
-                                               "Violating our terms of service",
-                                               "Creating products that violate our ToS",
-                                               "Using Gumroad to commit fraud",
-                                               "Using Gumroad for posting spam or SEO manipulation",
-                                             ])
-      expect(props["authenticity_token"]).to be_present
+      expect(inertia.props[:title]).to eq("Mass-suspend users")
+      expect(inertia.props[:suspend_reasons]).to eq([
+                                                      "Violating our terms of service",
+                                                      "Creating products that violate our ToS",
+                                                      "Using Gumroad to commit fraud",
+                                                      "Using Gumroad for posting spam or SEO manipulation",
+                                                    ])
+      expect(inertia.props[:authenticity_token]).to be_present
     end
   end
 

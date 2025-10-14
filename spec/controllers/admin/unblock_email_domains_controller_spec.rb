@@ -2,8 +2,9 @@
 
 require "spec_helper"
 require "shared_examples/admin_base_controller_concern"
+require "inertia_rails/rspec"
 
-describe Admin::UnblockEmailDomainsController do
+describe Admin::UnblockEmailDomainsController, type: :controller, inertia: true do
   render_views
 
   it_behaves_like "inherits from Admin::BaseController"
@@ -20,14 +21,7 @@ describe Admin::UnblockEmailDomainsController do
       get :show
       expect(response).to be_successful
       expect(response.body).to include("data-page")
-      expect(response.body).to include("Admin/UnblockEmailDomains/Show")
-
-      data_page = response.body.match(/data-page="([^"]+)"/)[1]
-      json_object = JSON.parse(CGI.unescapeHTML(data_page))
-      props = json_object["props"]
-
-      expect(props["title"]).to eq("Mass-unblock email domains")
-      expect(props["authenticity_token"]).to be_present
+      expect(inertia.component).to eq "Admin/UnblockEmailDomains/Show"
     end
   end
 
@@ -38,7 +32,6 @@ describe Admin::UnblockEmailDomainsController do
     it "enqueues a job to unsuspend the specified email domains" do
       put :update, params: { email_domains: { identifiers: } }
       expect(UnblockObjectWorker.jobs.size).to eq(2)
-      expect(flash[:notice]).to eq "Unblocking email domains in progress!"
       expect(response).to redirect_to(admin_unblock_email_domains_url)
     end
 

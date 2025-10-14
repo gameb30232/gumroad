@@ -3,18 +3,13 @@ import "abortcontroller-polyfill/dist/abortcontroller-polyfill-only";
 import "whatwg-fetch";
 import ReactOnRails from "react-on-rails";
 
-import AffiliatedPage from "$app/components/server-components/AffiliatedPage";
 import AffiliateRequestPage from "$app/components/server-components/AffiliateRequestPage";
 import AffiliatesPage from "$app/components/server-components/AffiliatesPage";
 import Alert from "$app/components/server-components/Alert";
-import ArchivedProductsPage from "$app/components/server-components/ArchivedProductsPage";
 import AudienceCustomersPage from "$app/components/server-components/Audience/CustomersPage";
 import AudiencePage from "$app/components/server-components/AudiencePage";
-import BalancePage from "$app/components/server-components/BalancePage";
 import BundleEditPage from "$app/components/server-components/BundleEditPage";
 import CheckoutPage from "$app/components/server-components/CheckoutPage";
-import CollaboratorsPage from "$app/components/server-components/CollaboratorsPage";
-import CollabsPage from "$app/components/server-components/CollabsPage";
 import CommunitiesPage from "$app/components/server-components/CommunitiesPage";
 import CountrySelectionModal from "$app/components/server-components/CountrySelectionModal";
 import CustomersDownloadPopover from "$app/components/server-components/CustomersPage/DownloadPopover";
@@ -36,13 +31,11 @@ import HelpCenterArticlesIndexPage from "$app/components/server-components/HelpC
 import LibraryPage from "$app/components/server-components/LibraryPage";
 import LoginPage from "$app/components/server-components/LoginPage";
 import Nav from "$app/components/server-components/Nav";
-import NewProductPage from "$app/components/server-components/NewProductPage";
 import PayoutCreditCard from "$app/components/server-components/PayoutPage/CreditCard";
 import PdfReaderPage from "$app/components/server-components/PdfReaderPage";
 import ProductPage from "$app/components/server-components/Product";
 import ProductIframePage from "$app/components/server-components/Product/IframePage";
 import ProductEditPage from "$app/components/server-components/ProductEditPage";
-import ProductsDashboardPage from "$app/components/server-components/ProductsDashboardPage";
 import Profile from "$app/components/server-components/Profile";
 import ProfileCoffeePage from "$app/components/server-components/Profile/CoffeePage";
 import ProfilePostPage from "$app/components/server-components/Profile/PostPage";
@@ -82,22 +75,17 @@ import WorkflowsPage from "$app/components/server-components/WorkflowsPage";
 
 ReactOnRails.register({
   AdvancedSettingsPage,
-  AffiliatedPage,
   AffiliateRequestPage,
   AffiliatesPage,
   Alert,
   ApplicationEditPage,
-  ArchivedProductsPage,
   HelpCenterArticlesIndexPage,
   SupportHeader,
   AudienceCustomersPage,
   AudiencePage,
   AuthorizedApplicationsSettingsPage,
-  BalancePage,
   BundleEditPage,
   CheckoutPage,
-  CollaboratorsPage,
-  CollabsPage,
   CommunitiesPage,
   CountrySelectionModal,
   CustomersDownloadPopover,
@@ -120,7 +108,6 @@ ReactOnRails.register({
   LoginPage,
   MainSettingsPage,
   Nav,
-  NewProductPage,
   PasswordSettingsPage,
   PaymentsSettingsPage,
   PayoutCreditCard,
@@ -129,7 +116,6 @@ ReactOnRails.register({
   ProductIframePage,
   PurchaseProductPage,
   ProductPage,
-  ProductsDashboardPage,
   Profile,
   ProfileCoffeePage,
   ProfilePostPage,
