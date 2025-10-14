@@ -100,18 +100,10 @@ export const SalesChart = ({
           })
         }
       />
-      <Bar dataKey="sales" stackId="stack" className="fill-current">
+      <Bar dataKey="sales" stackId="stack" className="fill-current" data-testid="chart-bar" />
+      <Bar dataKey="viewsWithoutSales" stackId="stack" radius={[4, 4, 0, 0]} data-testid="chart-bar">
         {dataPoints.map((_, index) => (
-          <Cell key={index} aria-label="chart-bar" />
-        ))}
-      </Bar>
-      <Bar dataKey="viewsWithoutSales" stackId="stack" radius={[4, 4, 0, 0]}>
-        {dataPoints.map((_, index) => (
-          <Cell
-            key={index}
-            className={tooltip?.index === index ? "fill-foreground/20" : "fill-foreground/10"}
-            aria-label="chart-bar"
-          />
+          <Cell key={index} className={tooltip?.index === index ? "fill-foreground/20" : "fill-foreground/10"} />
         ))}
       </Bar>
       <Line {...lineProps(dotRef, dataPoints.length)} dataKey="totals" yAxisId="totals" />
