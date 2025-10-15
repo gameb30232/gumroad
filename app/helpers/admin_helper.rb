@@ -63,14 +63,9 @@ module AdminHelper
     end
   end
 
-  def blocked_email_tooltip(email)
-    email_blocked_object = BlockedObject.email.find_active_object(email)
-    email_domain = Mail::Address.new(email).domain
-    email_domain_blocked_object = BlockedObject.email_domain.find_active_object(email_domain)
-    return unless email_blocked_object || email_domain_blocked_object
-
-    email_blocked_content = email_blocked_object&.blocked? && "Email blocked #{email_blocked_object.blocked_at.to_formatted_s(:long)} (block created #{email_blocked_object.created_at.to_formatted_s(:long)})"
-    email_domain_blocked_content = email_domain_blocked_object&.blocked? && "#{email_domain} blocked #{email_domain_blocked_object.blocked_at.to_formatted_s(:long)} (block created #{email_domain_blocked_object.created_at.to_formatted_s(:long)})"
+  def blocked_email_tooltip(user)
+    email_blocked_content = user.blocked_by_form_email? && "Email blocked #{user.blocked_by_form_email_at.to_formatted_s(:long)} (block created #{user.blocked_by_form_email_at.to_formatted_s(:long)})"
+    email_domain_blocked_content = user.blocked_by_form_email_domain? && "#{user.form_email_domain} blocked #{user.blocked_by_form_email_domain_at.to_formatted_s(:long)} (block created #{user.blocked_by_form_email_domain_at.to_formatted_s(:long)})"
     content = tag.div(class: "paragraphs") do
       concat tag.span(email_blocked_content) if email_blocked_content
       concat tag.span(email_domain_blocked_content) if email_domain_blocked_content
