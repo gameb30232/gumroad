@@ -107,38 +107,39 @@ describe AdminHelper do
   end
 
   describe "#blocked_email_tooltip" do
-    let(:user) { User.last }
     let(:email) { "john@example.com" }
+    let(:user) { create(:user, email:) }
 
     before do
-      user.block_by_email_domain!(Mail::Address.new(email).domain)
+      user.block_by_form_email!
+      user.block_by_form_email_domain!
     end
 
     it "includes email and email domain tooltip information" do
-      result = blocked_email_tooltip(email)
+      result = blocked_email_tooltip(user)
       expect(result).to include("Email blocked")
       expect(result).to include("example.com blocked")
     end
 
     context "with unblocked email domain" do
       before do
-        user.unblock_by_email_domain!
+        user.unblock_by_form_email_domain!
       end
 
       it "includes email information" do
-        result = blocked_email_tooltip(email)
-        expect(result).to_not include("Email blocked")
-        expect(result).to include("example.com blocked")
+        result = blocked_email_tooltip(user)
+        expect(result).to include("Email blocked")
+        expect(result).to_not include("example.com blocked")
       end
     end
 
     context "with unblocked email domain" do
       before do
-        user.unblock_by_email_domain!
+        user.unblock_by_form_email_domain!
       end
 
       it "includes email information" do
-        result = blocked_email_tooltip(email)
+        result = blocked_email_tooltip(user)
         expect(result).to include("Email blocked")
         expect(result).to_not include("example.com blocked")
       end
@@ -147,11 +148,11 @@ describe AdminHelper do
     context "with both email and email domain unblocked" do
       before do
         user.unblock_by_email!
-        user.unblock_by_email_domain!
+        user.unblock_by_form_email_domain!
       end
 
       it "returns nil" do
-        result = blocked_email_tooltip(email)
+        result = blocked_email_tooltip(user)
         expect(result).to be(nil)
       end
     end
