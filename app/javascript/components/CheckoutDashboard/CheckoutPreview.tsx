@@ -1,4 +1,3 @@
-import cx from "classnames";
 import * as React from "react";
 
 import { CardProduct } from "$app/parsers/product";
@@ -12,7 +11,6 @@ export const CheckoutPreview = ({
   children,
   cartItem,
   recommendedProduct,
-  className,
 }: {
   children?: React.ReactNode;
   cartItem: CartItem;

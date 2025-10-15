@@ -5,7 +5,7 @@
   <div class="modal gr-auth showing squished" style="display: contents">
     <%= react_component "SubscriptionManagerMagicLink", props: @react_component_props, prerender: true %>
   </div>
-  <aside class="avatars-container">
-    <img src="<%= image_url("auth/background.png") %>">
+  <aside class="avatars-container fixed top-0 right-0 bottom-0 z-[var(--z-index-menubar)] w-full overflow-auto lg:border-l lg:border-border lg:w-[40vw]">
+    <img src="<%= image_url("auth/background.png") %>" class="h-full w-full object-cover">
   </aside>
 </div>

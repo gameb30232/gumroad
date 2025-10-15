@@ -14,13 +14,9 @@ type AsideProps = {
 
 export const Aside = ({ children, className, ariaLabel, onClose, header, fixed = true }: AsideProps) => {
   const classes = cx(
-    // Base styles
     "overflow-auto bg-filled p-6 gap-4 flex flex-col",
-    // Positioning
     fixed ? "fixed top-0 right-0 bottom-0 z-[var(--z-index-menubar)] w-full" : "relative",
-    // Mobile behavior - hide on mobile when not fixed
     !fixed && "hidden lg:flex",
-    // Responsive styles
     "lg:border-l lg:border-border lg:w-[40vw]",
     className,
   );
