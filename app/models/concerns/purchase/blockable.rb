@@ -48,6 +48,7 @@ module Purchase::Blockable
   def buyer_blocked?
     blocked_by_browser_guid? ||
       blocked_by_email? ||
+      blocked_by_purchaser_email? ||
       blocked_by_paypal_email? ||
       blocked_by_gifter_email? ||
       blocked_by_ip_address? ||
