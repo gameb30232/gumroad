@@ -78,6 +78,23 @@ services:
         fi;
       done; exit 0; "
 
+  copyfixturefiles:
+    image: quay.io/gumroad/minio-mc:RELEASE.2025-08-13T08-35-41Z
+    depends_on:
+      createbuckets:
+        condition: service_completed_successfully
+    volumes:
+      - ../spec/support/fixtures:/fixtures:ro
+    entrypoint: >
+      /bin/sh -c " /usr/bin/mc alias set myminio http://minio:9000 minioadmin minioadmin; echo \"Copying fixture files to MinIO bucket...\"; for file in billion-dollar-company-chapter-0.pdf; do
+        if [ -f \"/fixtures/$$file\" ]; then
+          echo \"Copying $$file to gumroad-specs/specs/\";
+          /usr/bin/mc cp \"/fixtures/$$file\" \"myminio/gumroad-specs/specs/$$file\";
+        else
+          echo \"Warning: $$file not found in fixtures directory\";
+        fi;
+      done; echo \"Fixture files copied successfully\"; exit 0; "
+
 volumes:
   mysql_data:
   redis_data:
