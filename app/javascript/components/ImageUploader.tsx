@@ -35,7 +35,7 @@ export const ImageUploader = ({
     defaultImageUrl && `linear-gradient(${overlayColor}, ${overlayColor}), url(${defaultImageUrl}) center / cover`;
 
   return (
-    <div className="override grid grid-cols-[12.5rem_1fr] gap-5">
+    <div className="grid grid-cols-[12.5rem_1fr] gap-5">
       {uploading ? (
         <div className="placeholder aspect-square items-center">
           <Progress width="2rem" />
@@ -64,11 +64,11 @@ export const ImageUploader = ({
         </div>
       ) : (
         <figure className="relative aspect-square">
-          <img alt={imageAlt} src={imageUrl} className="h-full w-full rounded border border-border bg-background" />
+          <img alt={imageAlt} src={imageUrl} className="h-full w-full rounded-sm border border-border bg-background" />
           <Button
             color="primary"
             small
-            className="absolute right-2 top-2"
+            className="absolute top-2 right-2"
             aria-label="Remove"
             onClick={onRemove}
             disabled={disabled}

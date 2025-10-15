@@ -13,6 +13,7 @@ import { Icon } from "$app/components/Icons";
 import { Card } from "$app/components/Product/Card";
 import { Progress } from "$app/components/Progress";
 import { showAlert } from "$app/components/server-components/Alert";
+import { ProductCardGrid } from "$app/components/ui/ProductCardGrid";
 import { useDebouncedCallback } from "$app/components/useDebouncedCallback";
 import { useOnChange } from "$app/components/useOnChange";
 import { useOnScrollToBottom } from "$app/components/useOnScrollToBottom";
@@ -73,17 +74,17 @@ export const ContentTab = () => {
             <h1>Library</h1>
           </header>
           <section>
-            <div className="product-card-grid">
+            <ProductCardGrid>
               {bundle.products.map((bundleProduct) => (
                 <Card key={bundleProduct.id} product={bundleProduct} />
               ))}
-            </div>
+            </ProductCardGrid>
           </section>
         </div>
       }
     >
       <form onSubmit={(evt) => evt.preventDefault()} ref={formRef}>
-        <section className="!p-4 md:!p-8">
+        <section className="p-4! md:p-8!">
           {hasOutdatedPurchases ? <BundleContentUpdatedStatus /> : null}
           {isSelecting ? (
             <>
@@ -134,7 +135,7 @@ export const ContentTab = () => {
                 </div>
               ) : null}
               <div
-                className="override grid gap-4 rounded border border-border bg-background p-4"
+                className="grid gap-4 rounded-sm border border-border bg-background p-4"
                 aria-label="Product selector"
               >
                 <div className="input">
