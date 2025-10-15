@@ -5,6 +5,7 @@ import { assertResponseError } from "$app/utils/request";
 
 import { Icon } from "$app/components/Icons";
 import { showAlert } from "$app/components/server-components/Alert";
+import { Aside } from "$app/components/ui/Aside";
 
 export const WishlistEditor = ({
   id,
@@ -43,19 +44,22 @@ export const WishlistEditor = ({
   };
 
   return (
-    <aside className="z-30">
-      <header>
-        <div>
-          <h2>{newName || "Untitled"}</h2>
-          {isDiscoverable ? (
-            <small className="text-muted mt-1">
-              <Icon name="solid-check-circle" /> Discoverable
-            </small>
-          ) : null}
-        </div>
-        <button className="close" aria-label="Close" onClick={close} />
-      </header>
-
+    <Aside
+      ariaLabel="Wishlist Editor"
+      onClose={close}
+      header={
+        <>
+          <div>
+            <h2 className="text-singleline">{newName || "Untitled"}</h2>
+            {isDiscoverable ? (
+              <small className="text-muted mt-1">
+                <Icon name="solid-check-circle" /> Discoverable
+              </small>
+            ) : null}
+          </div>
+        </>
+      }
+    >
       <fieldset>
         <label htmlFor={`${uid}-name`}>Name</label>
         <input
@@ -77,6 +81,6 @@ export const WishlistEditor = ({
           onBlur={() => void update()}
         />
       </fieldset>
-    </aside>
+    </Aside>
   );
 };

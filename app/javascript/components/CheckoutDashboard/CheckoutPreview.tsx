@@ -1,3 +1,4 @@
+import cx from "classnames";
 import * as React from "react";
 
 import { CardProduct } from "$app/parsers/product";
@@ -76,7 +77,7 @@ export const CheckoutPreview = ({
   );
 
   return (
-    <aside aria-label="Preview" className={className}>
+    <div className="flex flex-col gap-4">
       <header>
         <h2>Preview</h2>
       </header>
@@ -93,6 +94,6 @@ export const CheckoutPreview = ({
           {children}
         </PaymentStateContext.Provider>
       </Preview>
-    </aside>
+    </div>
   );
 };

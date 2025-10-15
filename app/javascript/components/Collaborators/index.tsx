@@ -28,6 +28,7 @@ import { assertResponseError } from "$app/utils/request";
 import { Button } from "$app/components/Button";
 import CollaboratorForm from "$app/components/Collaborators/Form";
 import { IncomingCollaborators } from "$app/components/Collaborators/IncomingCollaborators";
+import { Aside } from "$app/components/ui/Aside";
 import { Layout } from "$app/components/Collaborators/Layout";
 import { Icon } from "$app/components/Icons";
 import { useLoggedInUser } from "$app/components/LoggedInUser";
@@ -83,12 +84,15 @@ const CollaboratorDetails = ({
   const navigation = useNavigation();
 
   return ReactDOM.createPortal(
-    <aside className="flex! flex-col!">
-      <header>
-        <h2>{selectedCollaborator.name}</h2>
-        <button className="close" aria-label="Close" onClick={onClose} />
-      </header>
-
+    <Aside
+      ariaLabel="Collaborator Details"
+      onClose={onClose}
+      header={
+        <>
+          <h2 className="text-singleline">{selectedCollaborator.name}</h2>
+        </>
+      }
+    >
       {selectedCollaborator.setup_incomplete ? (
         <div role="alert" className="warning">
           Collaborators won't receive their cut until they set up a payout account in their Gumroad settings.
@@ -131,7 +135,7 @@ const CollaboratorDetails = ({
           {navigation.state === "submitting" ? "Removing..." : "Remove"}
         </Button>
       </section>
-    </aside>,
+    </Aside>,
     document.body,
   );
 };

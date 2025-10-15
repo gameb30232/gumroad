@@ -17,6 +17,7 @@ import { buildStaticRouter, GlobalProps, register } from "$app/utils/serverCompo
 import { Button } from "$app/components/Button";
 import { Icon } from "$app/components/Icons";
 import { Popover } from "$app/components/Popover";
+import { Aside, FixedAsideWrapper } from "$app/components/ui/Aside";
 import WorkflowEmails from "$app/components/server-components/WorkflowsPage/WorkflowEmails";
 import WorkflowForm, { WorkflowTrigger } from "$app/components/server-components/WorkflowsPage/WorkflowForm";
 import WorkflowList from "$app/components/server-components/WorkflowsPage/WorkflowList";
@@ -38,12 +39,12 @@ export const Layout = ({ title, actions, navigation, children, preview }: Layout
       {navigation ?? null}
     </PageHeader>
     {preview ? (
-      <div className="fixed-aside flex-1 lg:grid lg:grid-cols-[1fr_30vw]">
+      <FixedAsideWrapper showAside={true}>
         <div>{children}</div>
-        <aside className="hidden lg:block" aria-label="Preview">
+        <Aside ariaLabel="Preview" className="hidden lg:block" fixed={false}>
           {preview}
-        </aside>
-      </div>
+        </Aside>
+      </FixedAsideWrapper>
     ) : (
       <div>{children}</div>
     )}

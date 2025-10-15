@@ -19,6 +19,7 @@ import { useLoggedInUser } from "$app/components/LoggedInUser";
 import { Select } from "$app/components/Select";
 import { Toggle } from "$app/components/Toggle";
 import { TypeSafeOptionSelect } from "$app/components/TypeSafeOptionSelect";
+import { Aside, FixedAsideWrapper } from "$app/components/ui/Aside";
 
 export type SimpleProduct = { id: string; name: string; archived: boolean };
 
@@ -110,7 +111,7 @@ const FormPage = ({
       }
       hasAside
     >
-      <div className="fixed-aside flex-1 lg:grid lg:grid-cols-[1fr_30vw]">
+      <FixedAsideWrapper showAside={true}>
         <div>
           <section className="space-y-4 border-b border-border p-4 md:p-8">
             <header className="flex items-center justify-between">
@@ -349,20 +350,21 @@ const FormPage = ({
             </Toggle>
           </section>
         </div>
-        <CheckoutPreview
-          className="hidden lg:block"
-          cartItem={{
-            ...cartItem,
-            product: {
-              ...cartItem.product,
-              has_offer_codes: displayOfferCodeField,
-              custom_fields: customFields.map(({ key, ...field }) => ({ ...field, id: key })),
-              has_tipping_enabled: tippingEnabled,
-            },
-          }}
-          recommendedProduct={recommendationType !== "no_recommendations" ? cardProduct : undefined}
-        />
-      </div>
+        <Aside ariaLabel="Preview" className="hidden lg:block" fixed={false}>
+          <CheckoutPreview
+            cartItem={{
+              ...cartItem,
+              product: {
+                ...cartItem.product,
+                has_offer_codes: displayOfferCodeField,
+                custom_fields: customFields.map(({ key, ...field }) => ({ ...field, id: key })),
+                has_tipping_enabled: tippingEnabled,
+              },
+            }}
+            recommendedProduct={recommendationType !== "no_recommendations" ? cardProduct : undefined}
+          />
+        </Aside>
+      </FixedAsideWrapper>
     </Layout>
   );
 };

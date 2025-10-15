@@ -28,6 +28,7 @@ import { Layout, Page } from "$app/components/CheckoutDashboard/Layout";
 import { useClientAlert } from "$app/components/ClientAlertProvider";
 import { Details } from "$app/components/Details";
 import { Icon } from "$app/components/Icons";
+import { Aside, FixedAsideWrapper } from "$app/components/ui/Aside";
 import { useLoggedInUser } from "$app/components/LoggedInUser";
 import { Pagination, PaginationProps } from "$app/components/Pagination";
 import { Popover } from "$app/components/Popover";
@@ -392,11 +393,15 @@ const UpsellDrawer = ({
   const loggedInUser = useLoggedInUser();
   const isReadOnly = !loggedInUser?.policies.upsell.create;
   return (
-    <aside>
-      <header>
-        <h2>{selectedUpsell.name}</h2>
-        <button className="close" aria-label="Close" onClick={onClose} />
-      </header>
+    <Aside
+      ariaLabel="Upsell Details"
+      onClose={onClose}
+      header={
+        <>
+          <h2 className="text-singleline">{selectedUpsell.name}</h2>
+        </>
+      }
+    >
       <section className="stack">
         <h3>Details</h3>
         <div>
@@ -502,7 +507,7 @@ const UpsellDrawer = ({
           {isLoading ? "Deleting..." : "Delete"}
         </Button>
       </section>
-    </aside>
+    </Aside>
   );
 };
 
@@ -694,7 +699,7 @@ const Form = ({
           </>
         }
       />
-      <div className="squished fixed-aside flex-1 lg:grid lg:grid-cols-[1fr_30vw]">
+      <FixedAsideWrapper showAside={true} className="squished">
         <form>
           <section className="p-8!">
             <p>
@@ -927,87 +932,89 @@ const Form = ({
             )}
           </section>
         </form>
-        <CheckoutPreview cartItem={previewCartItem}>
-          <dialog open aria-labelledby={`${uid}preview`}>
-            <header>
-              <h2 id={`${uid}preview`}>{offerText.value}</h2>
-              <button className="close" />
-            </header>
-            {isCrossSell ? (
-              <CrossSellModal
-                crossSell={{
-                  id: "",
-                  replace_selected_products: type === "replacement-cross-sell",
-                  text: offerText.value,
-                  description: offerDescription,
-                  offered_product: {
-                    ...(offeredCartItem ?? PLACEHOLDER_CART_ITEM),
-                    option_id: offeredVariantId.value ?? previewCartItem.option_id,
-                    price: offeredCartItem
-                      ? applySelection(offeredCartItem.product, null, {
-                          rent: !!offeredCartItem.product.rental?.rent_only,
-                          optionId: offeredVariantId.value,
-                          price: { error: false, value: null },
-                          quantity: 1,
-                          recurrence: offeredCartItem.recurrence,
-                          callStartTime: null,
-                          payInInstallments: false,
-                        }).priceCents
-                      : 0,
-                    accepted_offer: null,
-                  },
-                  discount: discount?.value
-                    ? {
-                        ...(discount.type === "percent"
-                          ? { type: "percent", percents: discount.value }
-                          : { type: "fixed", cents: discount.value }),
-                        product_ids: null,
-                        minimum_quantity: null,
-                        expires_at: null,
-                        duration_in_billing_cycles: null,
-                        minimum_amount_cents: null,
-                      }
-                    : null,
-                  ratings: null,
-                }}
-                accept={() => {}}
-                decline={() => {}}
-                cart={{
-                  items: [previewCartItem],
-                  discountCodes: [],
-                }}
-              />
-            ) : (
-              <UpsellModal
-                upsell={{
-                  id: "",
-                  text: offerText.value,
-                  description: offerDescription,
-                  offeredOption: selectedProduct?.options.find(({ id }) =>
-                    variants.some(({ offeredVariantId }) => offeredVariantId === id),
-                  ) ?? {
+        <Aside ariaLabel="Preview" fixed={false}>
+          <CheckoutPreview cartItem={previewCartItem}>
+            <dialog open aria-labelledby={`${uid}preview`}>
+              <header>
+                <h2 id={`${uid}preview`}>{offerText.value}</h2>
+                <button className="close" />
+              </header>
+              {isCrossSell ? (
+                <CrossSellModal
+                  crossSell={{
                     id: "",
-                    name: "",
-                    quantity_left: null,
-                    description: "",
-                    price_difference_cents: 0,
-                    recurrence_price_values: null,
-                    is_pwyw: false,
-                    duration_in_minutes: null,
-                  },
-                  item: previewCartItem,
-                }}
-                cart={{
-                  items: [previewCartItem],
-                  discountCodes: [],
-                }}
-                accept={() => {}}
-                decline={() => {}}
-              />
-            )}
-          </dialog>
-        </CheckoutPreview>
-      </div>
+                    replace_selected_products: type === "replacement-cross-sell",
+                    text: offerText.value,
+                    description: offerDescription,
+                    offered_product: {
+                      ...(offeredCartItem ?? PLACEHOLDER_CART_ITEM),
+                      option_id: offeredVariantId.value ?? previewCartItem.option_id,
+                      price: offeredCartItem
+                        ? applySelection(offeredCartItem.product, null, {
+                            rent: !!offeredCartItem.product.rental?.rent_only,
+                            optionId: offeredVariantId.value,
+                            price: { error: false, value: null },
+                            quantity: 1,
+                            recurrence: offeredCartItem.recurrence,
+                            callStartTime: null,
+                            payInInstallments: false,
+                          }).priceCents
+                        : 0,
+                      accepted_offer: null,
+                    },
+                    discount: discount?.value
+                      ? {
+                          ...(discount.type === "percent"
+                            ? { type: "percent", percents: discount.value }
+                            : { type: "fixed", cents: discount.value }),
+                          product_ids: null,
+                          minimum_quantity: null,
+                          expires_at: null,
+                          duration_in_billing_cycles: null,
+                          minimum_amount_cents: null,
+                        }
+                      : null,
+                    ratings: null,
+                  }}
+                  accept={() => {}}
+                  decline={() => {}}
+                  cart={{
+                    items: [previewCartItem],
+                    discountCodes: [],
+                  }}
+                />
+              ) : (
+                <UpsellModal
+                  upsell={{
+                    id: "",
+                    text: offerText.value,
+                    description: offerDescription,
+                    offeredOption: selectedProduct?.options.find(({ id }) =>
+                      variants.some(({ offeredVariantId }) => offeredVariantId === id),
+                    ) ?? {
+                      id: "",
+                      name: "",
+                      quantity_left: null,
+                      description: "",
+                      price_difference_cents: 0,
+                      recurrence_price_values: null,
+                      is_pwyw: false,
+                      duration_in_minutes: null,
+                    },
+                    item: previewCartItem,
+                  }}
+                  cart={{
+                    items: [previewCartItem],
+                    discountCodes: [],
+                  }}
+                  accept={() => {}}
+                  decline={() => {}}
+                />
+              )}
+            </dialog>
+          </CheckoutPreview>
+        </Aside>
+      </FixedAsideWrapper>
     </>
   );
 };

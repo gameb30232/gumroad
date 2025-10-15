@@ -19,6 +19,7 @@ import { showAlert } from "$app/components/server-components/Alert";
 import { Profile, Props as ProfileProps } from "$app/components/server-components/Profile/index";
 import { Layout as SettingsLayout } from "$app/components/Settings/Layout";
 import { SocialAuthButton } from "$app/components/SocialAuthButton";
+import { Aside, FixedAsideWrapper } from "$app/components/ui/Aside";
 import { WithTooltip } from "$app/components/WithTooltip";
 
 type Props = {
@@ -77,7 +78,7 @@ const SettingsPage = ({ creator_profile, profile_settings, settings_pages, ...pr
 
   return (
     <SettingsLayout currentPage="profile" pages={settings_pages} onSave={handleSave} canUpdate={canUpdate} hasAside>
-      <div className="fixed-aside lg:grid lg:grid-cols-[1fr_30vw]">
+      <FixedAsideWrapper showAside={true}>
         <form>
           <section className="p-4! md:p-8!">
             <header>
@@ -217,21 +218,26 @@ const SettingsPage = ({ creator_profile, profile_settings, settings_pages, ...pr
             </div>
           </section>
         </form>
-        <aside>
-          <header>
-            <h2>Preview</h2>
-            <WithTooltip tip="Preview" position="bottom">
-              <a
-                className="button"
-                href={Routes.root_url({ host: creatorProfile.subdomain })}
-                target="_blank"
-                aria-label="Preview"
-                rel="noreferrer"
-              >
-                <Icon name="arrow-diagonal-up-right" />
-              </a>
-            </WithTooltip>
-          </header>
+        <Aside
+          ariaLabel="Preview"
+          fixed={false}
+          header={
+            <>
+              <h2 className="text-singleline">Preview</h2>
+              <WithTooltip tip="Preview" position="bottom">
+                <a
+                  className="button"
+                  href={Routes.root_url({ host: creatorProfile.subdomain })}
+                  target="_blank"
+                  aria-label="Preview"
+                  rel="noreferrer"
+                >
+                  <Icon name="arrow-diagonal-up-right" />
+                </a>
+              </WithTooltip>
+            </>
+          }
+        >
           <Preview
             scaleFactor={0.35}
             style={{
@@ -251,8 +257,8 @@ const SettingsPage = ({ creator_profile, profile_settings, settings_pages, ...pr
           >
             <Profile creator_profile={creatorProfile} {...profileProps} bio={profileSettings.bio} />
           </Preview>
-        </aside>
-      </div>
+        </Aside>
+      </FixedAsideWrapper>
     </SettingsLayout>
   );
 };

@@ -18,6 +18,7 @@ import { useImageUploadSettings } from "$app/components/RichTextEditor";
 import { showAlert } from "$app/components/server-components/Alert";
 import { newEmailPath } from "$app/components/server-components/EmailsPage";
 import { SubtitleFile } from "$app/components/SubtitleList/Row";
+import { Aside, FixedAsideWrapper } from "$app/components/ui/Aside";
 import { PageHeader } from "$app/components/ui/PageHeader";
 import { Tabs, Tab } from "$app/components/ui/Tabs";
 import { useRefToLatest } from "$app/components/useRefToLatest";
@@ -301,26 +302,32 @@ export const Layout = ({
           {headerActions}
         </div>
       </PageHeader>
-      <div className={preview ? "squished fixed-aside flex-1 lg:grid lg:grid-cols-[1fr_30vw]" : "flex-1"}>
+      <FixedAsideWrapper showAside={!!preview} className={preview ? "squished" : ""}>
         {children}
         {preview ? (
-          <aside aria-label="Preview" className="sticky! top-0 min-h-screen self-start overflow-y-auto">
-            <header>
-              <h2>Preview</h2>
-              <WithTooltip tip="Preview">
-                <NavigationButton
-                  aria-label="Preview"
-                  disabled={isBusy}
-                  href={url}
-                  onClick={(evt) => {
-                    evt.preventDefault();
-                    void save().then(() => window.open(url, "_blank"));
-                  }}
-                >
-                  <Icon name="arrow-diagonal-up-right" />
-                </NavigationButton>
-              </WithTooltip>
-            </header>
+          <Aside
+            ariaLabel="Preview"
+            fixed={false}
+            className="sticky top-0 min-h-screen self-start overflow-y-auto"
+            header={
+              <>
+                <h2 className="text-singleline">Preview</h2>
+                <WithTooltip tip="Preview">
+                  <NavigationButton
+                    aria-label="Preview"
+                    disabled={isBusy}
+                    href={url}
+                    onClick={(evt) => {
+                      evt.preventDefault();
+                      void save().then(() => window.open(url, "_blank"));
+                    }}
+                  >
+                    <Icon name="arrow-diagonal-up-right" />
+                  </NavigationButton>
+                </WithTooltip>
+              </>
+            }
+          >
             <Preview
               scaleFactor={0.4}
               style={{
@@ -331,9 +338,9 @@ export const Layout = ({
             >
               {preview}
             </Preview>
-          </aside>
+          </Aside>
         ) : null}
-      </div>
+      </FixedAsideWrapper>
     </>
   );
 };

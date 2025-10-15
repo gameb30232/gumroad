@@ -20,6 +20,7 @@ import {
   useSearchContext,
   ViewEmailButton,
 } from "$app/components/server-components/EmailsPage";
+import { Aside } from "$app/components/ui/Aside";
 import { useDebouncedCallback } from "$app/components/useDebouncedCallback";
 import { useOnChange } from "$app/components/useOnChange";
 import { useUserAgentInfo } from "$app/components/UserAgent";
@@ -179,11 +180,15 @@ export const PublishedTab = () => {
               </Button>
             ) : null}
             {selectedInstallment ? (
-              <aside className="mt-0!">
-                <header>
-                  <h2>{selectedInstallment.name}</h2>
-                  <button className="close" aria-label="Close" onClick={() => setSelectedInstallmentId(null)} />
-                </header>
+              <Aside
+                ariaLabel="Email Details"
+                onClose={() => setSelectedInstallmentId(null)}
+                header={
+                  <>
+                    <h2 className="text-singleline">{selectedInstallment.name}</h2>
+                  </>
+                }
+              >
                 <div className="stack">
                   <div>
                     <h5>Sent</h5>
@@ -246,7 +251,7 @@ export const PublishedTab = () => {
                     Delete
                   </Button>
                 </div>
-              </aside>
+              </Aside>
             ) : null}
             {deletingInstallment ? (
               <Modal

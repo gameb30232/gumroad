@@ -28,6 +28,7 @@ import { Icon } from "$app/components/Icons";
 import { useLoggedInUser } from "$app/components/LoggedInUser";
 import { NumberInput } from "$app/components/NumberInput";
 import { Pagination, PaginationProps } from "$app/components/Pagination";
+import { Aside } from "$app/components/ui/Aside";
 import { Popover } from "$app/components/Popover";
 import { PriceInput } from "$app/components/PriceInput";
 import { Select, Option } from "$app/components/Select";
@@ -473,11 +474,15 @@ const DiscountsPage = ({ offer_codes, pages, products, pagination: initialPagina
           </div>
         )}
         {selectedOfferCode ? (
-          <aside>
-            <header>
-              <h2>{selectedOfferCode.name || selectedOfferCode.code.toUpperCase()}</h2>
-              <button className="close" aria-label="Close" onClick={() => setSelectedOfferCodeId(null)} />
-            </header>
+          <Aside
+            ariaLabel="Discount Details"
+            onClose={() => setSelectedOfferCodeId(null)}
+            header={
+              <>
+                <h2 className="text-singleline">{selectedOfferCode.name || selectedOfferCode.code.toUpperCase()}</h2>
+              </>
+            }
+          >
             <section className="stack">
               <h3>Details</h3>
               <div>
@@ -591,7 +596,7 @@ const DiscountsPage = ({ offer_codes, pages, products, pagination: initialPagina
                 {isLoading ? "Deleting..." : "Delete"}
               </Button>
             </section>
-          </aside>
+          </Aside>
         ) : null}
       </section>
     </Layout>

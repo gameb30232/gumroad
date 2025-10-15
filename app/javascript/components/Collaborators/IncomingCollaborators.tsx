@@ -17,6 +17,7 @@ import { Icon } from "$app/components/Icons";
 import { LoadingSpinner } from "$app/components/LoadingSpinner";
 import { useLoggedInUser } from "$app/components/LoggedInUser";
 import { showAlert } from "$app/components/server-components/Alert";
+import { Aside } from "$app/components/ui/Aside";
 import { WithTooltip } from "$app/components/WithTooltip";
 
 import placeholder from "$assets/images/placeholders/collaborators.png";
@@ -70,12 +71,15 @@ const IncomingCollaboratorDetails = ({
   disabled: boolean;
 }) =>
   ReactDOM.createPortal(
-    <aside className="flex! flex-col!">
-      <header>
-        <h2>{selected.seller_name}</h2>
-        <button className="close" aria-label="Close" onClick={onClose} />
-      </header>
-
+    <Aside
+      ariaLabel="Incoming Collaborator Details"
+      onClose={onClose}
+      header={
+        <>
+          <h2 className="text-singleline">{selected.seller_name}</h2>
+        </>
+      }
+    >
       <section className="stack">
         <h3>Email</h3>
         <div>
@@ -111,7 +115,7 @@ const IncomingCollaboratorDetails = ({
           </>
         )}
       </section>
-    </aside>,
+    </Aside>,
     document.body,
   );
 
