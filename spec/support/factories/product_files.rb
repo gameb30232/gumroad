@@ -40,7 +40,7 @@ FactoryBot.define do
     end
 
     factory :readable_document, aliases: [:pdf_product_file] do
-      url { "https://s3.amazonaws.com/gumroad-specs/specs/billion-dollar-company-chapter-0.pdf" }
+      url { "#{S3_BASE_URL}specs/billion-dollar-company-chapter-0.pdf" }
       filetype { "pdf" }
       filegroup { "document" }
     end

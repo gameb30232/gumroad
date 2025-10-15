@@ -5,7 +5,7 @@ require "spec_helper"
 describe PdfStampingService::Stamp do
   describe ".can_stamp_file?" do
     context "with readable PDF" do
-      let(:pdf) { create(:readable_document, url: "https://s3.amazonaws.com/gumroad-specs/specs/billion-dollar-company-chapter-0.pdf") }
+      let(:pdf) { create(:readable_document, url: "#{S3_BASE_URL}specs/billion-dollar-company-chapter-0.pdf") }
 
       it "returns true" do
         result = described_class.can_stamp_file?(product_file: pdf)
@@ -29,7 +29,7 @@ describe PdfStampingService::Stamp do
   end
 
   describe ".perform!" do
-    let(:pdf_url) { "https://s3.amazonaws.com/gumroad-specs/specs/billion-dollar-company-chapter-0.pdf" }
+    let(:pdf_url) { "#{S3_BASE_URL}specs/billion-dollar-company-chapter-0.pdf" }
     let(:product_file) { create(:readable_document, url: pdf_url) }
     let(:watermark_text) { "customer@example.com" }
     let(:created_file_paths) { [] }

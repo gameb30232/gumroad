@@ -70,7 +70,7 @@ class ProductFile < ApplicationRecord
   end
 
   def has_cdn_url?
-    url&.starts_with?(S3_BASE_URL) || url&.starts_with?(AWS_S3_ENDPOINT)
+    url&.starts_with?(S3_BASE_URL)
   end
 
   def has_valid_external_link?

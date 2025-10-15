@@ -3,7 +3,7 @@
 # aws credentials for the web app are stored in the secrets
 AWS_ACCESS_KEY = GlobalConfig.get("AWS_ACCESS_KEY_ID")
 AWS_SECRET_KEY = GlobalConfig.get("AWS_SECRET_ACCESS_KEY")
-AWS_S3_ENDPOINT = GlobalConfig.get("AWS_S3_ENDPOINT")
+AWS_S3_ENDPOINT = GlobalConfig.get("AWS_S3_ENDPOINT", "https://s3.amazonaws.com")
 AWS_DEFAULT_REGION = GlobalConfig.get("AWS_DEFAULT_REGION", "us-east-1")
 
 aws_config = {
@@ -35,7 +35,7 @@ S3_BUCKET = {
   production: "gumroad"
 }[Rails.env.to_sym]
 
-S3_BASE_URL = GlobalConfig.get("S3_BASE_URL_TEMPLATE", "https://s3.amazonaws.com/#{S3_BUCKET}/")
+S3_BASE_URL = GlobalConfig.get("S3_BASE_URL_TEMPLATE", "#{AWS_S3_ENDPOINT}/#{S3_BUCKET}/")
 
 
 PUBLIC_STORAGE_S3_BUCKET = {
