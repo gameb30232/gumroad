@@ -85,15 +85,16 @@ services:
         condition: service_completed_successfully
     volumes:
       - ../spec/support/fixtures:/fixtures:ro
+      - ./fixture-files.txt:/fixture-files.txt:ro
     entrypoint: >
-      /bin/sh -c " /usr/bin/mc alias set myminio http://minio:9000 minioadmin minioadmin; echo \"Copying fixture files to MinIO bucket...\"; for file in billion-dollar-company-chapter-0.pdf encrypted_pdf.pdf; do
+      /bin/sh -c " /usr/bin/mc alias set myminio http://minio:9000 minioadmin minioadmin; echo \"Copying fixture files to MinIO bucket...\"; while IFS= read -r file; do
         if [ -f \"/fixtures/$$file\" ]; then
           echo \"Copying $$file to gumroad-specs/specs/\";
           /usr/bin/mc cp \"/fixtures/$$file\" \"myminio/gumroad-specs/specs/$$file\";
         else
           echo \"Warning: $$file not found in fixtures directory\";
         fi;
-      done; echo \"Fixture files copied successfully\"; exit 0; "
+      done < /fixture-files.txt; echo \"Fixture files copied successfully\"; exit 0; "
 
   nginx:
     image: nginx:1.23.3
