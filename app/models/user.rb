@@ -11,7 +11,8 @@ class User < ApplicationRecord
           StripeConnect, Stats, PaymentStats, FeatureStatus, Risk, Compliance, Validations, Taxation, PingNotification,
           AsyncDeviseNotification, Posts, AffiliatedProducts, Followers, LowBalanceFraudCheck, MailerLevel,
           DirectAffiliates, AsJson, Tier, Recommendations, Team, AustralianBacktaxes, WithCdnUrl,
-          TwoFactorAuthentication, Versionable, Comments, VipCreator, SignedUrlHelper, Purchases, SecureExternalId
+          TwoFactorAuthentication, Versionable, Comments, VipCreator, SignedUrlHelper, Purchases, SecureExternalId,
+          AttributeBlockable
 
   stripped_fields :name, :facebook_meta_tag, :google_analytics_id, :username, :email, :support_email
 
@@ -155,6 +156,10 @@ class User < ApplicationRecord
   attr_json_data_accessor :payout_frequency, default: User::PayoutSchedule::WEEKLY
   attr_json_data_accessor :custom_fee_per_thousand
   attr_json_data_accessor :payouts_paused_by
+
+  attr_blockable :email
+  attr_blockable :form_email, attribute: :email
+  attr_blockable :form_email_domain, attribute: :email_domain
 
   validates :username, uniqueness: { case_sensitive: true },
                        length: { minimum: 3, maximum: 20 },
@@ -638,6 +643,10 @@ class User < ApplicationRecord
   def form_email
     return unconfirmed_email if unconfirmed_email.present?
     email if email.present?
+  end
+
+  def form_email_domain
+    form_email.presence && Mail::Address.new(form_email).domain
   end
 
   def currency_symbol
