@@ -53,9 +53,9 @@ import { Pagination } from "$app/components/Pagination";
 import { Popover } from "$app/components/Popover";
 import { Progress } from "$app/components/Progress";
 import { showAlert } from "$app/components/server-components/Alert";
+import { Aside } from "$app/components/ui/Aside";
 import { PageHeader } from "$app/components/ui/PageHeader";
 import { Tabs, Tab } from "$app/components/ui/Tabs";
-import { Aside } from "$app/components/ui/Aside";
 import { useDebouncedCallback } from "$app/components/useDebouncedCallback";
 import { useLocalPagination } from "$app/components/useLocalPagination";
 import { useUserAgentInfo } from "$app/components/UserAgent";
@@ -606,11 +606,7 @@ const AffiliateDetails = ({
     <Aside
       ariaLabel="Affiliate Details"
       onClose={onClose}
-      header={
-        <>
-          <h2 className="text-singleline">{selectedAffiliate.affiliate_user_name}</h2>
-        </>
-      }
+      header={<h2 className="text-singleline">{selectedAffiliate.affiliate_user_name}</h2>}
     >
       {selectedAffiliate.products.map((product) => {
         const productStatistics = statistics?.products[product.id];

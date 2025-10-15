@@ -28,11 +28,11 @@ import { Icon } from "$app/components/Icons";
 import { useLoggedInUser } from "$app/components/LoggedInUser";
 import { NumberInput } from "$app/components/NumberInput";
 import { Pagination, PaginationProps } from "$app/components/Pagination";
-import { Aside } from "$app/components/ui/Aside";
 import { Popover } from "$app/components/Popover";
 import { PriceInput } from "$app/components/PriceInput";
 import { Select, Option } from "$app/components/Select";
 import { TypeSafeOptionSelect } from "$app/components/TypeSafeOptionSelect";
+import { Aside } from "$app/components/ui/Aside";
 import { PageHeader } from "$app/components/ui/PageHeader";
 import { useDebouncedCallback } from "$app/components/useDebouncedCallback";
 import { useGlobalEventListener } from "$app/components/useGlobalEventListener";
@@ -478,9 +478,7 @@ const DiscountsPage = ({ offer_codes, pages, products, pagination: initialPagina
             ariaLabel="Discount Details"
             onClose={() => setSelectedOfferCodeId(null)}
             header={
-              <>
-                <h2 className="text-singleline">{selectedOfferCode.name || selectedOfferCode.code.toUpperCase()}</h2>
-              </>
+              <h2 className="text-singleline">{selectedOfferCode.name || selectedOfferCode.code.toUpperCase()}</h2>
             }
           >
             <section className="stack">

@@ -74,11 +74,7 @@ const IncomingCollaboratorDetails = ({
     <Aside
       ariaLabel="Incoming Collaborator Details"
       onClose={onClose}
-      header={
-        <>
-          <h2 className="text-singleline">{selected.seller_name}</h2>
-        </>
-      }
+      header={<h2 className="text-singleline">{selected.seller_name}</h2>}
     >
       <section className="stack">
         <h3>Email</h3>

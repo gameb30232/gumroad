@@ -28,11 +28,11 @@ import { assertResponseError } from "$app/utils/request";
 import { Button } from "$app/components/Button";
 import CollaboratorForm from "$app/components/Collaborators/Form";
 import { IncomingCollaborators } from "$app/components/Collaborators/IncomingCollaborators";
-import { Aside } from "$app/components/ui/Aside";
 import { Layout } from "$app/components/Collaborators/Layout";
 import { Icon } from "$app/components/Icons";
 import { useLoggedInUser } from "$app/components/LoggedInUser";
 import { showAlert } from "$app/components/server-components/Alert";
+import { Aside } from "$app/components/ui/Aside";
 import { WithTooltip } from "$app/components/WithTooltip";
 
 import placeholder from "$assets/images/placeholders/collaborators.png";
@@ -87,11 +87,7 @@ const CollaboratorDetails = ({
     <Aside
       ariaLabel="Collaborator Details"
       onClose={onClose}
-      header={
-        <>
-          <h2 className="text-singleline">{selectedCollaborator.name}</h2>
-        </>
-      }
+      header={<h2 className="text-singleline">{selectedCollaborator.name}</h2>}
     >
       {selectedCollaborator.setup_incomplete ? (
         <div role="alert" className="warning">

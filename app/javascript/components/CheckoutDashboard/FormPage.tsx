@@ -111,7 +111,7 @@ const FormPage = ({
       }
       hasAside
     >
-      <FixedAsideWrapper showAside={true}>
+      <FixedAsideWrapper showAside>
         <div>
           <section className="space-y-4 border-b border-border p-4 md:p-8">
             <header className="flex items-center justify-between">

@@ -177,11 +177,7 @@ export const ScheduledTab = () => {
               <Aside
                 ariaLabel="Scheduled Email Details"
                 onClose={() => setSelectedInstallmentId(null)}
-                header={
-                  <>
-                    <h2 className="text-singleline">{selectedInstallment.name}</h2>
-                  </>
-                }
+                header={<h2 className="text-singleline">{selectedInstallment.name}</h2>}
               >
                 <div className="stack">
                   <div>

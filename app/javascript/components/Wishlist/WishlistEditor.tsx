@@ -48,16 +48,14 @@ export const WishlistEditor = ({
       ariaLabel="Wishlist Editor"
       onClose={close}
       header={
-        <>
-          <div>
-            <h2 className="text-singleline">{newName || "Untitled"}</h2>
-            {isDiscoverable ? (
-              <small className="text-muted mt-1">
-                <Icon name="solid-check-circle" /> Discoverable
-              </small>
-            ) : null}
-          </div>
-        </>
+        <div>
+          <h2 className="text-singleline">{newName || "Untitled"}</h2>
+          {isDiscoverable ? (
+            <small className="text-muted mt-1">
+              <Icon name="solid-check-circle" /> Discoverable
+            </small>
+          ) : null}
+        </div>
       }
     >
       <fieldset>

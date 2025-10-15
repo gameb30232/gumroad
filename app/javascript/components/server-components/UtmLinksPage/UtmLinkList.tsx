@@ -414,15 +414,7 @@ const UtmLinkDetails = ({
   const userAgentInfo = useUserAgentInfo();
 
   return ReactDOM.createPortal(
-    <Aside
-      ariaLabel="UTM Link Details"
-      onClose={onClose}
-      header={
-        <>
-          <h2 className="text-singleline">{utmLink.title}</h2>
-        </>
-      }
-    >
+    <Aside ariaLabel="UTM Link Details" onClose={onClose} header={<h2 className="text-singleline">{utmLink.title}</h2>}>
       <section className="stack">
         <div>
           <h3>Details</h3>

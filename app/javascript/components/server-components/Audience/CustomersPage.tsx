@@ -784,16 +784,14 @@ const CustomerDrawer = ({
       ariaLabel="Customer Details"
       onClose={onClose}
       header={
-        <>
-          <div className="flex items-center gap-2">
-            {onBack ? (
-              <button onClick={onBack} aria-label="Return to bundle">
-                <Icon name="arrow-left" style={{ fontSize: "var(--big-icon-size)" }} />
-              </button>
-            ) : null}
-            <h2 className="text-singleline">{customer.product.name}</h2>
-          </div>
-        </>
+        <div className="flex items-center gap-2">
+          {onBack ? (
+            <button onClick={onBack} aria-label="Return to bundle">
+              <Icon name="arrow-left" style={{ fontSize: "var(--big-icon-size)" }} />
+            </button>
+          ) : null}
+          <h2 className="text-singleline">{customer.product.name}</h2>
+        </div>
       }
     >
       {commission ? <CommissionStatusPill commission={commission} /> : null}

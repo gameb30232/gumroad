@@ -78,7 +78,7 @@ const SettingsPage = ({ creator_profile, profile_settings, settings_pages, ...pr
 
   return (
     <SettingsLayout currentPage="profile" pages={settings_pages} onSave={handleSave} canUpdate={canUpdate} hasAside>
-      <FixedAsideWrapper showAside={true}>
+      <FixedAsideWrapper showAside>
         <form>
           <section className="p-4! md:p-8!">
             <header>

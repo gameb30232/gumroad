@@ -23,16 +23,16 @@ export const Aside = ({ children, className, ariaLabel, onClose, header, fixed =
 
   return (
     <aside className={classes} aria-label={ariaLabel}>
-      {header && (
+      {header ? (
         <header className="flex items-start justify-between gap-4">
           <div className="flex flex-1 items-start justify-between">{header}</div>
-          {onClose && (
+          {onClose ? (
             <button type="button" onClick={onClose} aria-label="Close">
               <Icon name="x" />
             </button>
-          )}
+          ) : null}
         </header>
-      )}
+      ) : null}
       {children}
     </aside>
   );

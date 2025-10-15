@@ -28,13 +28,13 @@ import { Layout, Page } from "$app/components/CheckoutDashboard/Layout";
 import { useClientAlert } from "$app/components/ClientAlertProvider";
 import { Details } from "$app/components/Details";
 import { Icon } from "$app/components/Icons";
-import { Aside, FixedAsideWrapper } from "$app/components/ui/Aside";
 import { useLoggedInUser } from "$app/components/LoggedInUser";
 import { Pagination, PaginationProps } from "$app/components/Pagination";
 import { Popover } from "$app/components/Popover";
 import { applySelection } from "$app/components/Product/ConfigurationSelector";
 import { Select } from "$app/components/Select";
 import { CrossSellModal, UpsellModal } from "$app/components/server-components/CheckoutPage";
+import { Aside, FixedAsideWrapper } from "$app/components/ui/Aside";
 import { PageHeader } from "$app/components/ui/PageHeader";
 import { useDebouncedCallback } from "$app/components/useDebouncedCallback";
 import { Sort, useSortingTableDriver } from "$app/components/useSortingTableDriver";
@@ -396,11 +396,7 @@ const UpsellDrawer = ({
     <Aside
       ariaLabel="Upsell Details"
       onClose={onClose}
-      header={
-        <>
-          <h2 className="text-singleline">{selectedUpsell.name}</h2>
-        </>
-      }
+      header={<h2 className="text-singleline">{selectedUpsell.name}</h2>}
     >
       <section className="stack">
         <h3>Details</h3>
@@ -699,7 +695,7 @@ const Form = ({
           </>
         }
       />
-      <FixedAsideWrapper showAside={true} className="squished">
+      <FixedAsideWrapper showAside className="squished">
         <form>
           <section className="p-8!">
             <p>
