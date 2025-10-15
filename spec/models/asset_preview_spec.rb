@@ -143,7 +143,7 @@ describe AssetPreview, :vcr do
 
     it "works as expected with a public URL" do
       expect do
-        asset_preview.url = "#{S3_BASE_URL}/specs/amir.png"
+        asset_preview.url = "#{S3_BASE_URL}/specs/test.png"
         asset_preview.analyze_file
         asset_preview.save!
       end.to_not raise_error

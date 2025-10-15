@@ -6,7 +6,7 @@ require "shared_examples/authorize_called"
 describe AssetPreviewsController do
   let(:seller) { create(:named_seller) }
   let(:product) { create(:product, user: seller) }
-  let(:s3_url) { "#{S3_BASE_URL}/specs/amir.png" }
+  let(:s3_url) { "#{S3_BASE_URL}/specs/test.png" }
 
   include_context "with user signed in as admin for seller"
 

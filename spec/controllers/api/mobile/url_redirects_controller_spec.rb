@@ -7,7 +7,7 @@ describe Api::Mobile::UrlRedirectsController do
     @product = create(:product, name: "The Works of Edgar Gumstein", description: "A collection of works spanning 1984 — 1994")
     @product_file1 = create(:product_file, position: 0, link: @product, description: nil, url: "#{S3_BASE_URL}/specs/kFDzu.png")
     @product_file3 = create(:product_file, position: 1, link: @product, description: "A magic song", url: "#{S3_BASE_URL}/specs/magic.mp3")
-    @product_file2 = create(:product_file, position: 2, link: @product, description: "A picture", url: "#{S3_BASE_URL}/specs/amir.png")
+    @product_file2 = create(:product_file, position: 2, link: @product, description: "A picture", url: "#{S3_BASE_URL}/specs/test.png")
     @product.product_files = [@product_file1, @product_file2, @product_file3]
     @url_redirect = create(:url_redirect, link: @product)
     @env_double = double
@@ -81,7 +81,7 @@ describe Api::Mobile::UrlRedirectsController do
       get :url_redirect_attributes, params: { id: @url_redirect.external_id, mobile_token: Api::Mobile::BaseController::MOBILE_TOKEN }
       assert_response 200
       expect(response.parsed_body).to eq({ success: true, product: @url_redirect.product_json_data, purchase_valid: true }.as_json)
-      expect(response.parsed_body["product"]["file_data"].map { |file| file["name"] }).to eq ["kFDzu.png", "magic.mp3", "amir.png"]
+      expect(response.parsed_body["product"]["file_data"].map { |file| file["name"] }).to eq ["kFDzu.png", "magic.mp3", "test.png"]
     end
 
     it "returns only files for specific version purchase" do
