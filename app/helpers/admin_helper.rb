@@ -64,6 +64,8 @@ module AdminHelper
   end
 
   def blocked_email_tooltip(user)
+    return unless user.blocked_by_form_email? || user.blocked_by_form_email_domain?
+
     email_blocked_content = user.blocked_by_form_email? && "Email blocked #{user.blocked_by_form_email_at.to_formatted_s(:long)} (block created #{user.blocked_by_form_email_at.to_formatted_s(:long)})"
     email_domain_blocked_content = user.blocked_by_form_email_domain? && "#{user.form_email_domain} blocked #{user.blocked_by_form_email_domain_at.to_formatted_s(:long)} (block created #{user.blocked_by_form_email_domain_at.to_formatted_s(:long)})"
     content = tag.div(class: "paragraphs") do
