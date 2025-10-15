@@ -248,7 +248,6 @@ module User::Risk
         .having("SUM(amount_cents) > 0")
         .order(updated_at: :desc)
         .limit(MAX_REFUND_QUEUE_SIZE)
-        .with_blocked_attributes_for(:form_email, :form_email_domain)
     end
   end
 end

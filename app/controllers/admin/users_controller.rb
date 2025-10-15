@@ -42,6 +42,7 @@ class Admin::UsersController < Admin::BaseController
   def refund_queue
     @title = "Refund queue"
     @users = User.refund_queue
+    @users = @users.with_blocked_attributes_for(:form_email, :form_email_domain)
   end
 
   def enable
