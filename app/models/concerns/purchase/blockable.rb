@@ -48,21 +48,23 @@ module Purchase::Blockable
   def buyer_blocked?
     blocked_by_browser_guid? ||
       blocked_by_email? ||
-      blocked_by_purchaser_email? ||
       blocked_by_paypal_email? ||
       blocked_by_gifter_email? ||
+      blocked_by_purchaser_email? ||
       blocked_by_ip_address? ||
-      blocked_by_charge_processor_fingerprint?
+      blocked_by_charge_processor_fingerprint? ||
+      blocked_by_recent_stripe_fingerprint?
   end
 
   def block_buyer!(blocking_user_id: nil, comment_content: nil)
     block_by_browser_guid!(by_user_id: blocking_user_id)
-    block_by_ip_address!(by_user_id: blocking_user_id, expires_in: BlockedObject::IP_ADDRESS_BLOCKING_DURATION_IN_MONTHS.months)
     block_by_email!(by_user_id: blocking_user_id)
     block_by_paypal_email!(by_user_id: blocking_user_id)
     block_by_gifter_email!(by_user_id: blocking_user_id)
     block_by_purchaser_email!(by_user_id: blocking_user_id)
+    block_by_ip_address!(by_user_id: blocking_user_id, expires_in: BlockedObject::IP_ADDRESS_BLOCKING_DURATION_IN_MONTHS.months)
     block_by_charge_processor_fingerprint!(by_user_id: blocking_user_id)
+    block_by_recent_stripe_fingerprint!(by_user_id: blocking_user_id)
 
     blocking_user = User.find_by(id: blocking_user_id) if blocking_user_id.present?
     update!(is_buyer_blocked_by_admin: true) if blocking_user&.is_team_member?
