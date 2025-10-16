@@ -11,6 +11,7 @@ type JobHistoryItem = {
   country_code: string;
   start_date: string;
   end_date: string;
+  sales_type?: string;
   enqueued_at: string;
   status: string;
   download_url?: string;
@@ -18,12 +19,13 @@ type JobHistoryItem = {
 
 type Props = {
   countries: [string, string][];
+  sales_types: [string, string][];
   job_history: JobHistoryItem[];
   form_action: string;
   authenticity_token: string;
 };
 
-const AdminSalesReportsPage = ({ countries, job_history, form_action, authenticity_token }: Props) => {
+const AdminSalesReportsPage = ({ countries, sales_types, job_history, form_action, authenticity_token }: Props) => {
   const countryCodeToName = React.useMemo(() => {
     const map: Record<string, string> = {};
     countries.forEach(([name, code]) => {
@@ -63,6 +65,16 @@ const AdminSalesReportsPage = ({ countries, job_history, form_action, authentici
             <label htmlFor="end_date">End date</label>
             <input name="sales_report[end_date]" id="end_date" type="date" required />
 
+            <label htmlFor="sales_type">Type of sales</label>
+            <select name="sales_report[sales_type]" id="sales_type" required>
+              <option value="">Select sales type</option>
+              {sales_types.map(([code, name]) => (
+                <option key={code} value={code}>
+                  {name}
+                </option>
+              ))}
+            </select>
+
             <button type="submit" className="button primary" disabled={isLoading}>
               {isLoading ? "Generating..." : "Generate report"}
             </button>
@@ -79,6 +91,7 @@ const AdminSalesReportsPage = ({ countries, job_history, form_action, authentici
               <tr>
                 <th>Country</th>
                 <th>Date range</th>
+                <th>Sales Type</th>
                 <th>Enqueued at</th>
                 <th>Status</th>
                 <th>Download</th>
@@ -91,6 +104,7 @@ const AdminSalesReportsPage = ({ countries, job_history, form_action, authentici
                   <td>
                     {job.start_date} to {job.end_date}
                   </td>
+                  <td>{sales_types.find(([code, _name]) => code === job.sales_type)?.[1]}</td>
                   <td>{new Date(job.enqueued_at).toLocaleString()}</td>
                   <td>{job.status}</td>
                   <td>

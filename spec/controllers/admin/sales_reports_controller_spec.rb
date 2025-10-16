@@ -22,20 +22,21 @@ describe Admin::SalesReportsController do
     end
 
     it "sets React component props" do
-      allow($redis).to receive(:lrange).with(RedisKey.sales_report_jobs, 0, 19).and_return(['{"job_id":"123","country_code":"US","start_date":"2023-01-01","end_date":"2023-03-31","enqueued_at":"2023-01-01T00:00:00Z","status":"processing"}'])
+      allow($redis).to receive(:lrange).with(RedisKey.sales_report_jobs, 0, 19).and_return(['{"job_id":"123","country_code":"US","start_date":"2023-01-01","end_date":"2023-03-31","sales_type":"all_sales","enqueued_at":"2023-01-01T00:00:00Z","status":"processing"}'])
 
       get :index
 
       expect(assigns(:react_component_props)).to be_present
       expect(assigns(:react_component_props)[:title]).to eq("Sales reports")
       expect(assigns(:react_component_props)[:countries]).to be_present
+      expect(assigns(:react_component_props)[:sales_types]).to be_present
       expect(assigns(:react_component_props)[:job_history]).to be_present
       expect(assigns(:react_component_props)[:form_action]).to eq(admin_sales_reports_path)
       expect(assigns(:react_component_props)[:authenticity_token]).to be_present
     end
 
     it "loads job history from Redis" do
-      allow($redis).to receive(:lrange).with(RedisKey.sales_report_jobs, 0, 19).and_return(['{"job_id":"123","country_code":"US","start_date":"2023-01-01","end_date":"2023-03-31","enqueued_at":"2023-01-01T00:00:00Z","status":"processing"}'])
+      allow($redis).to receive(:lrange).with(RedisKey.sales_report_jobs, 0, 19).and_return(['{"job_id":"123","country_code":"US","start_date":"2023-01-01","end_date":"2023-03-31","sales_type":"all_sales","enqueued_at":"2023-01-01T00:00:00Z","status":"processing"}'])
 
       get :index
 
@@ -49,12 +50,14 @@ describe Admin::SalesReportsController do
     let(:country_code) { "GB" }
     let(:start_date) { "2023-01-01" }
     let(:end_date) { "2023-03-31" }
+    let(:sales_type) { GenerateSalesReportJob::ALL_SALES }
     let(:params) do
       {
         sales_report: {
           country_code: country_code,
           start_date: start_date,
-          end_date: end_date
+          end_date: end_date,
+          sales_type:,
         }
       }
     end
@@ -71,6 +74,7 @@ describe Admin::SalesReportsController do
         country_code,
         start_date,
         end_date,
+        GenerateSalesReportJob::ALL_SALES,
         true,
         nil
       )
@@ -103,6 +107,7 @@ describe Admin::SalesReportsController do
         country_code,
         start_date,
         end_date,
+        GenerateSalesReportJob::ALL_SALES,
         true,
         nil
       )

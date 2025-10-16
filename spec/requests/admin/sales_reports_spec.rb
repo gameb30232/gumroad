@@ -54,6 +54,7 @@ describe "Admin::SalesReportsController", type: :system, js: true do
             country_code: "GB",
             start_date: "2023-01-01",
             end_date: "2023-03-31",
+            sales_type: "all_sales",
             enqueued_at: Time.current.to_s,
             status: "processing"
           }.to_json
@@ -85,6 +86,7 @@ describe "Admin::SalesReportsController", type: :system, js: true do
       select "United Kingdom", from: "sales_report[country_code]"
       fill_in "sales_report[start_date]", with: "2023-01-01"
       fill_in "sales_report[end_date]", with: "2023-03-31"
+      select "All sales", from: "sales_report[sales_type]"
       click_button "Generate report"
 
       wait_for_ajax
@@ -93,6 +95,7 @@ describe "Admin::SalesReportsController", type: :system, js: true do
         "GB",
         "2023-01-01",
         "2023-03-31",
+        GenerateSalesReportJob::ALL_SALES,
         true,
         nil
       )

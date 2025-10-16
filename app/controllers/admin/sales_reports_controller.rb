@@ -11,6 +11,7 @@ class Admin::SalesReportsController < Admin::BaseController
     country_code = params[:sales_report][:country_code]
     start_date_str = params[:sales_report][:start_date]
     end_date_str = params[:sales_report][:end_date]
+    sales_type = params[:sales_report][:sales_type]
 
     # Validate country code
     if country_code.blank?
@@ -38,15 +39,20 @@ class Admin::SalesReportsController < Admin::BaseController
       return render json: { message: "Start date cannot be in the future" }, status: :unprocessable_entity
     end
 
+    unless GenerateSalesReportJob::SALES_TYPES.include?(sales_type)
+      return render json: { message: "Invalid sales type" }, status: :unprocessable_entity
+    end
+
     job_id = GenerateSalesReportJob.perform_async(
       country_code,
       start_date.to_s,
       end_date.to_s,
+      sales_type,
       true,
       nil
     )
 
-    store_job_details(job_id, country_code, start_date, end_date)
+    store_job_details(job_id, country_code, start_date, end_date, sales_type)
 
     render json: { success: true, message: "Sales report job enqueued successfully!" }
   end
@@ -56,6 +62,7 @@ class Admin::SalesReportsController < Admin::BaseController
       @react_component_props = {
         title: "Sales reports",
         countries: Compliance::Countries.for_select.map { |alpha2, name| [name, alpha2] },
+        sales_types: GenerateSalesReportJob::SALES_TYPES.map { [_1, _1.humanize] },
         job_history: fetch_job_history,
         form_action: admin_sales_reports_path,
         authenticity_token: form_authenticity_token
@@ -69,12 +76,13 @@ class Admin::SalesReportsController < Admin::BaseController
       []
     end
 
-    def store_job_details(job_id, country_code, start_date, end_date)
+    def store_job_details(job_id, country_code, start_date, end_date, sales_type)
       job_details = {
         job_id: job_id,
         country_code: country_code,
         start_date: start_date.to_s,
         end_date: end_date.to_s,
+        sales_type:,
         enqueued_at: Time.current.to_s,
         status: "processing"
       }
