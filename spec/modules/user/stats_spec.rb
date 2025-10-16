@@ -387,6 +387,8 @@ describe User::Stats, :vcr do
           Credit.create_for_financing_paydown!(purchase: create(:purchase, link: create(:product, user: @user)), amount_cents: -250, merchant_account: @user.stripe_account, stripe_loan_paydown_id: "cptxn_#{SecureRandom.uuid}")
           Credit.create_for_credit!(user: @user, amount_cents: 1000, crediting_user: create(:user))
         end
+        stub_const("GUMROAD_ADMIN_ID", create(:admin_user).id)
+        Credit.create_for_manual_paydown_on_stripe_loan!(amount_cents: -2000, merchant_account: @user.stripe_account, stripe_loan_paydown_id: "cptxn_#{SecureRandom.uuid}")
       end
 
       it "calculates the total loan repayment deduction made by stripe" do
@@ -394,7 +396,7 @@ describe User::Stats, :vcr do
         loan_repayment_cents = @user.loan_repayment_cents_for_balances(balance_ids)
 
         expect(balance_ids.count.positive?).to be(true)
-        expect(loan_repayment_cents).to eq(-1250) # -250 * 5
+        expect(loan_repayment_cents).to eq(-3250) # -250 * 5 - 2000
       end
     end
 
