@@ -11,4 +11,7 @@ class TestController < ApplicationController
     temp_file.rewind
     render plain: temp_file.read
   end
+
+  def alerts
+  end
 end
