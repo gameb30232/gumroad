@@ -178,6 +178,8 @@ Rails.application.routes.draw do
 
   # Configure redirections in development environment
   if Rails.env.development? || Rails.env.test?
+    get "test/alerts", to: "test#alerts"
+
     # redirect SHORT_DOMAIN to DOMAIN
     constraints(host_with_port: SHORT_DOMAIN) do
       match "/(*path)" => redirect { |_params, request| "#{UrlService.domain_with_protocol}/l#{request.fullpath}" }, via: [:get, :post]
